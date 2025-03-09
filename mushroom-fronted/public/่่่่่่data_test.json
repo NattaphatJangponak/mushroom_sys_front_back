@@ -1,0 +1,35 @@
+
+{
+  "users": [
+    { "user_id": "U001", "username": "farmer01", "password": "securepass", "uuid": "123e4567-e89b-12d3-a456-426614174000" },
+    { "user_id": "U002", "username": "farmer02", "password": "anotherpass", "uuid": "223e4567-e89b-12d3-a456-426614174001" }
+  ],
+  "farm_types": [
+    { "type_id": "T001", "type_name": "Organic Farm" },
+    { "type_id": "T002", "type_name": "Hydroponic Farm" }
+  ],
+  "farms": [
+    { "farm_id": "F001", "farm_name": "Sunrise Mushroom Farm", "farm_type": "T001", "owner_id": "U001" },
+    { "farm_id": "F002", "farm_name": "Green Valley Mushrooms", "farm_type": "T002", "owner_id": "U002" },
+    { "farm_id": "F003", "farm_name": "EcoGrow Mushrooms", "farm_type": "T001", "owner_id": "U001" },
+    { "farm_id": "F004", "farm_name": "Fresh Harvest Fungi", "farm_type": "T002", "owner_id": "U002" }
+  ],
+  "mushroom_rows": [
+    { "row_id": "R001", "farm_id": "F001", "row_status": "Active" },
+    { "row_id": "R002", "farm_id": "F002", "row_status": "Inactive" },
+    { "row_id": "R003", "farm_id": "F003", "row_status": "Active" },
+    { "row_id": "R004", "farm_id": "F004", "row_status": "Inactive" }
+  ],
+  "blocks": [
+    { "block_id": "B001", "row_id": "R001", "start_date": "2024-01-01", "current_date": "2024-02-23", "mushroom_percent": 75 },
+    { "block_id": "B002", "row_id": "R002", "start_date": "2024-01-15", "current_date": "2024-02-23", "mushroom_percent": 50 },
+    { "block_id": "B003", "row_id": "R003", "start_date": "2024-02-01", "current_date": "2024-02-23", "mushroom_percent": 60 },
+    { "block_id": "B004", "row_id": "R004", "start_date": "2024-02-10", "current_date": "2024-02-23", "mushroom_percent": 40 }
+  ],
+  "status_blocks": [
+    { "status_id": "S001", "status_name": "Ready for Harvest", "block_id": "B001" },
+    { "status_id": "S002", "status_name": "Growing", "block_id": "B002" },
+    { "status_id": "S003", "status_name": "Fruiting", "block_id": "B003" },
+    { "status_id": "S004", "status_name": "Harvested", "block_id": "B004" }
+  ]
+}

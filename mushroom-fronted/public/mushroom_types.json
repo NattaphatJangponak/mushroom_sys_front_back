@@ -1,0 +1,7 @@
+[
+    { "id": 1, "type_id": "M001", "type_name": "Shiitake" },
+    { "id": 2, "type_id": "M002", "type_name": "Oyster Mushroom" },
+    { "id": 3, "type_id": "M003", "type_name": "Portobello" },
+    { "id": 4, "type_id": "M004", "type_name": "Button Mushroom" }
+  ]
+  

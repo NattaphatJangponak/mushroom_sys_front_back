@@ -1,0 +1,6 @@
+[
+  { "id": 1, "device_id": "D001", "device_name": "Sensor A", "farm_type": "โรงปลูก" },
+  { "id": 2, "device_id": "D002", "device_name": "Sensor B", "farm_type": "โรงเพาะ" },
+  { "id": 3, "device_id": "D003", "device_name": "Controller C", "farm_type": "โรงปลูก" },
+  { "id": 4, "device_id": "D004", "device_name": "Controller D", "farm_type": "โรงเพาะ" }
+]

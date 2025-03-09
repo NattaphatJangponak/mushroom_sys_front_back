@@ -1,0 +1,29 @@
+/* @layer components {
+    .weather-card {
+        @apply bg-white shadow-lg rounded-lg p-4 text-center m-2 w-40;
+    }
+
+    .weather-card-title {
+        @apply font-semibold text-lg;
+    }
+
+    .weather-card-icon {
+        @apply mx-auto w-16 h-16;
+    }
+
+    .weather-card-description {
+        @apply text-md capitalize text-gray-600;
+    }
+
+    .weather-card-temp {
+        @apply text-lg font-bold text-gray-800;
+    }
+
+    .weather-card-humidity {
+        @apply text-sm text-gray-500;
+    }
+
+    .weather-container {
+        @apply flex justify-center items-center flex-wrap;
+    }
+} */

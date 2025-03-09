@@ -1,0 +1,6 @@
+[
+    { "type_id": "T001", "type_name": "Sensor" },
+    { "type_id": "T002", "type_name": "Controller" },
+    { "type_id": "T003", "type_name": "Actuator" }
+  ]
+  
