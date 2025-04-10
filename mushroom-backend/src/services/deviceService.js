@@ -1,15 +1,22 @@
 import db from '../config/db.js';
 
 export const getAllDevicesService = async () => {
-    try {
-        const item = await db.device.findMany({
-            orderBy: { device_id: 'asc' } // ✅ เรียงลำดับ device_id จากน้อยไปมาก
+    try { 
+        const items = await db.device.findMany({
+            include: {
+                farm: true, // include related farm data
+            },
+            orderBy: {
+                device_id: 'asc', // order by device_id ascending
+            },
         });
-        return item;
+        return items;
     } catch (error) {
         throw new Error(error.message);
     }
-}
+};
+
+
 
 export const getDeviceByIdService = async (id) => {
     try {
@@ -25,13 +32,18 @@ export const getDeviceByIdService = async (id) => {
 export const createDeviceService = async (data) => {
     try {
         const lastDevice = await db.device.findFirst({
-            orderBy: { device_id: 'desc' } // ✅ หา device_id ล่าสุด
+            orderBy: { device_id: 'desc' }
         });
 
-        const newId = lastDevice ? lastDevice.device_id + 1 : 1; // ✅ ถ้ามีข้อมูล ให้เพิ่มทีละ 1 ถ้าไม่มีเริ่มที่ 1
+        const newId = lastDevice ? lastDevice.device_id + 1 : 1;
 
+        // Convert farm_id to number if it exists
         const item = await db.device.create({
-            data: { ...data, device_id: newId },
+            data: { 
+                ...data, 
+                device_id: newId,
+                farm_id: data.farm_id ? parseInt(data.farm_id) : null
+            },
         });
 
         return item;
@@ -39,12 +51,18 @@ export const createDeviceService = async (data) => {
         throw new Error(error.message);
     }
 }
-
 export const updateDeviceByIdService = async (id, data) => {
     try {
+        // Convert all numeric fields from strings to numbers
+        const convertedData = {
+            ...data,
+            device_id: data.device_id ? parseInt(data.device_id) : undefined,
+            farm_id: data.farm_id ? parseInt(data.farm_id) : null
+        };
+
         const item = await db.device.update({
             where: { device_id: parseInt(id) },
-            data,
+            data: convertedData,
         });
         return item;
     } catch (error) {

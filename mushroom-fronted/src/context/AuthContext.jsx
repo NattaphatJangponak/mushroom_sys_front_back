@@ -41,6 +41,8 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await axios.post("http://localhost:5000/api/auth/login", { username, password });
             const { token } = response.data;
+            // console.log(username, password);
+            // console.log("Login successful:", response.data);
 
             localStorage.setItem("token", token);
             axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;

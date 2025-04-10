@@ -54,7 +54,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { username, password } = req.body;
-
+        console.log({username, password}); 
         const user = await getUserByUsername(username);
         if (!user) {
             return res.status(400).json({ message: 'Invalid credentials' });

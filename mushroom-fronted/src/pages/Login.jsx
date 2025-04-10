@@ -8,7 +8,7 @@ function Login() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
+     
     const handleLogin = async (e) => {
         e.preventDefault();
 
@@ -18,6 +18,7 @@ function Login() {
         }
 
         const success = await login(username, password);
+        console.log({username, password});
         if (success) {
             setUser(username)
             navigate("/homepage");
@@ -107,14 +108,14 @@ function Login() {
                 </form>
 
                 {/* Register */}
-                <div className="text-center mt-4">
+                {/* <div className="text-center mt-4">
                     <button
                         onClick={() => navigate("/register")}
                         className="font-semibold text-black hover:underline"
                     >
                         Register
                     </button>
-                </div>
+                </div> */}
             </div>
         </div>
     );

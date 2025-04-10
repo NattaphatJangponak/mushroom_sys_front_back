@@ -1,16 +1,18 @@
 import db from '../config/db.js';
 
-export const getViewCultivationByIdService = async (cul_id) => {
+export const getViewCultivationByDeviceIdService = async (device_id) => {
     try {
-        const items = await db.cultivationPot.findMany({
-            where: { cultivation_id: parseInt(cul_id) },
+
+        console.log('call here')
+
+        const items = await db.cultivationpot.findMany({
+            where: { device_id: parseInt(device_id) },
             include: {
-                typePot: {  // ✅ JOIN กับตาราง typePot
+                typepot: {  // ✅ ใช้ชื่อ relation ที่ถูกต้องตาม Prisma schema
                     select: { type_pot_name: true }
                 }
             }
         });
-        
 
         return items;
     } catch (error) {
@@ -28,7 +30,7 @@ export const getViewCultivationByIdService = async (cul_id) => {
 // }
 export const createViewCultivationByIdService = async (data) => {
     try {
-        const item = await db.cultivationPot.create({
+        const item = await db.cultivationpot.create({
             data,
         });
         return item;
@@ -38,7 +40,7 @@ export const createViewCultivationByIdService = async (data) => {
 }
 export const updateViewCultivationByIdService = async (id, data) => {
     try {
-        const item = await db.cultivationPot.update({
+        const item = await db.cultivationpot.update({
             where: { cultivation_pot_id: parseInt(id) }, // ✅ ใช้ `cultivation_pot_id`
             data,
         });
@@ -50,7 +52,7 @@ export const updateViewCultivationByIdService = async (id, data) => {
 
 export const deleteViewCultivationByIdService = async (cul_id) => {
     try {
-        const item = await db.cultivationPot.delete({
+        const item = await db.cultivationpot.delete({
             where: { cultivation_pot_id: parseInt(cul_id) }, // ✅ แก้เป็น `cultivation_pot_id`
         });
         return item;
@@ -65,7 +67,7 @@ export const deleteViewCultivationByIdService = async (cul_id) => {
 
 export const uploadBase64ImageService = async (cultivation_pot_id, imageBase64) => {
     try {
-        const updatedItem = await db.cultivationPot.update({
+        const updatedItem = await db.cultivationpot.update({
             where: { cultivation_pot_id: parseInt(cultivation_pot_id) },
             data: { image_base64: imageBase64 },
         });

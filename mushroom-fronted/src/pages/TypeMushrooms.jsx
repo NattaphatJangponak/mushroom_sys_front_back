@@ -93,7 +93,7 @@ const PotType = () => {
     // ✅ ปิด Modal และรีเซ็ตฟอร์ม
     const closeModal = () => {
         setModal(false);
-        setForm({ type_pot_id: "", type_pot_id: "", description: "", status: "inactive" });
+        setForm({ type_pot_id: "", description: "", status: "inactive" });
     };
 
     // ✅ ค้นหาและเรียงลำดับข้อมูล
@@ -138,7 +138,7 @@ const PotType = () => {
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="bg-gray-200">
-                            <th className="p-3 text-left">Pot Type ID</th>
+                            {/* <th className="p-3 text-left">Pot Type ID</th> */}
                             <th className="p-3 text-left">Pot Type Name</th>
                             <th className="p-3 text-left">Description</th>
                             <th className="p-3 text-left">Status</th>
@@ -148,7 +148,7 @@ const PotType = () => {
                     <tbody>
                         {filteredPotTypes.map(({ type_pot_id, type_pot_name, description, status }) => (
                             <tr key={type_pot_id} className="border-t">
-                                <td className="p-3">{type_pot_id}</td>
+                                {/* <td className="p-3">{type_pot_id}</td> */}
                                 <td className="p-3">{type_pot_name}</td>
                                 <td className="p-3">{description}</td>
                                 <td className="p-3">{status === true ? 'active' : 'inactive'}</td>

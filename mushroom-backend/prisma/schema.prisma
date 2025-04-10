@@ -7,84 +7,87 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  user_id  Int    @id @default(autoincrement())
-  username String @unique
-  password String
-  uuid     String @unique
+model cultivationpot {
+  cultivation_pot_id Int       @id @default(autoincrement())
+  type_pot_id        Int
+  index              Int?
+  farm_id            Int
+  device_id          Int
+  img_path           String?   @db.LongText
+  ai_result          String?
+  status             String?   @default("active")
+  pot_name           String?
+  age                Int       @default(1)
+  create_pot         DateTime? @db.Date
+  device             device    @relation(fields: [device_id], references: [device_id], onUpdate: Restrict, map: "CultivationPot_device_id_fkey")
+  farm               farm      @relation(fields: [farm_id], references: [farm_id], onUpdate: Restrict, map: "CultivationPot_farm_id_fkey")
+  typepot            typepot   @relation(fields: [type_pot_id], references: [type_pot_id], onDelete: Cascade, map: "CultivationPot_type_pot_id_fkey")
+
+  @@index([device_id], map: "CultivationPot_device_id_fkey")
+  @@index([farm_id], map: "CultivationPot_farm_id_fkey")
+  @@index([type_pot_id], map: "CultivationPot_type_pot_id_fkey")
 }
 
-model Farm {
-  farm_id          Int           @id @default(autoincrement())
+model device {
+  device_id      Int              @id @default(autoincrement())
+  device_name    String
+  description    String?
+  status         String?          @default("inactive")
+  device_type    String?
+  farm_id        Int
+  cultivationpot cultivationpot[]
+  farm           farm             @relation(fields: [farm_id], references: [farm_id], onUpdate: Restrict, map: "link_farm_id")
+  growingpot     growingpot[]
+
+  @@index([farm_id], map: "link_farm_id")
+}
+
+model farm {
+  farm_id          Int              @id @default(autoincrement())
   farm_name        String
   farm_type        String?
   farm_description String?
-  farm_status      Boolean?      @default(true) // Set a default value
+  farm_status      Boolean?         @default(true)
   temperature      Float?
   humidity         Float?
-  Cultivations     Cultivation[]
-  Growings         Growing[]
+  cultivationpot   cultivationpot[]
+  device           device[]
+  growingpot       growingpot[]
 }
 
-model Device {
-  device_id    Int           @id @default(autoincrement())
-  device_name  String
-  description  String?
-  device_type  String?
-  status       String?       @default("inactive") // Default status if needed
-  Cultivations Cultivation[]
-  Growings     Growing[]
-}
-
-model TypePot {
-  type_pot_id     Int              @id @default(autoincrement())
-  type_pot_name   String
-  description     String?
-  status          Boolean?         @default(true) // Default active status
-  CultivationPots CultivationPot[]
-  GrowingPots     GrowingPot[]
-}
-
-model Cultivation {
-  cultivation_id  Int              @id @default(autoincrement())
-  farm_id         Int
-  device_id       Int
-  farm            Farm             @relation(fields: [farm_id], references: [farm_id], onDelete: Cascade)
-  device          Device           @relation(fields: [device_id], references: [device_id], onDelete: Cascade)
-  CultivationPots CultivationPot[]
-}
-
-model CultivationPot {
-  cultivation_pot_id Int         @id @default(autoincrement())
-  cultivation_id     Int
-  pot_name           String?
-  type_pot_id        Int
-  index              Int?
-  img_path           String?
-  ai_result          String?
-  status             String?     @default("active") // Default value added
-  cultivation        Cultivation @relation(fields: [cultivation_id], references: [cultivation_id], onDelete: Cascade)
-  typePot            TypePot     @relation(fields: [type_pot_id], references: [type_pot_id], onDelete: Cascade)
-}
-
-model Growing {
-  growing_id  Int          @id @default(autoincrement())
-  farm_id     Int
-  device_id   Int
-  farm        Farm         @relation(fields: [farm_id], references: [farm_id], onDelete: Cascade)
-  device      Device       @relation(fields: [device_id], references: [device_id], onDelete: Cascade)
-  GrowingPots GrowingPot[]
-}
-
-model GrowingPot {
-  growing_pot_id Int     @id @default(autoincrement())
-  growing_id     Int
-  pot_name       String?
+model growingpot {
+  growing_pot_id Int       @id @default(autoincrement())
   type_pot_id    Int
   index          Int?
-  img_path       String?
+  farm_id        Int
+  device_id      Int
+  img_path       String?   @db.LongText
   ai_result      String?
-  status         String? @default("active") // Default value added
-  growing        Growing @relation(fields: [growing_id], references: [growing_id], onDelete: Cascade)
-  typePot        TypePot @relation(fields: [type_pot_id], references: [type_pot_id], onDelete: Cascade)
+  status         String?   @default("active")
+  pot_name       String?
+  age            Int       @default(1)
+  create_pot     DateTime? @db.Date
+  device         device    @relation(fields: [device_id], references: [device_id], onUpdate: Restrict, map: "GrowingPot_device_id_fkey")
+  farm           farm      @relation(fields: [farm_id], references: [farm_id], onUpdate: Restrict, map: "GrowingPot_farm_id_fkey")
+  typepot        typepot   @relation(fields: [type_pot_id], references: [type_pot_id], onDelete: Cascade, map: "GrowingPot_type_pot_id_fkey")
+
+  @@index([device_id], map: "GrowingPot_device_id_fkey")
+  @@index([farm_id], map: "GrowingPot_farm_id_fkey")
+  @@index([type_pot_id], map: "GrowingPot_type_pot_id_fkey")
+}
+
+model typepot {
+  type_pot_id    Int              @id @default(autoincrement())
+  type_pot_name  String
+  description    String?
+  status         Boolean?         @default(true)
+  cultivationpot cultivationpot[]
+  growingpot     growingpot[]
+}
+
+model user {
+  user_id  Int    @id @default(autoincrement())
+  username String @unique(map: "User_username_key")
+  password String
+  uuid     String @unique(map: "User_uuid_key")
 }

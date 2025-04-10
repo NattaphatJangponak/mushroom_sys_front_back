@@ -2,7 +2,7 @@ import db from '../config/db.js';
 
 export const getAllPotTypesService = async () => {
     try {
-        const item = await db.typePot.findMany();
+        const item = await db.typepot.findMany();
         return item;
     } catch (error) {
         throw new Error(error.message);
@@ -11,7 +11,7 @@ export const getAllPotTypesService = async () => {
 
 export const getPotTypeByIdService = async (id) => {
     try {
-        const item = await db.typePot.findUnique({
+        const item = await db.typepot.findUnique({
             where: { type_pot_id: parseInt(id) },
         });
         return item;
@@ -22,7 +22,7 @@ export const getPotTypeByIdService = async (id) => {
 
 export const createPotTypeService = async (data) => {
     try {
-        const item = await db.typePot.create({
+        const item = await db.typepot.create({
             data,
         });
         return item;
@@ -33,7 +33,7 @@ export const createPotTypeService = async (data) => {
 
 export const updatePotTypeByIdService = async (id, data) => {
     try {
-        const item = await db.typePot.update({
+        const item = await db.typepot.update({
             where: { type_pot_id: parseInt(id) },
             data,
         });
@@ -45,11 +45,11 @@ export const updatePotTypeByIdService = async (id, data) => {
 
 export const deletePotTypeByIdService = async (id) => {
     try {
-        const item = await db.typePot.delete({
+        const item = await db.typepot.delete({
             where: { type_pot_id: parseInt(id) },
         });
         return item;
     } catch (error) {
-        throw new Error(error.message); 
+        throw new Error(error.message);
     }
 }

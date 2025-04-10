@@ -1,9 +1,9 @@
-import { getViewCultivationByIdService, createViewCultivationByIdService, updateViewCultivationByIdService , deleteViewCultivationByIdService} from "../services/viewCultivationService.js";
+import { getViewCultivationByDeviceIdService, createViewCultivationByIdService, updateViewCultivationByIdService , deleteViewCultivationByIdService} from "../services/viewCultivationService.js";
 // ,getAllViewCultivationService , updateViewCultivationByIdService , deleteViewCultivationByIdService, createViewCultivationByIdService
 export const getViewCultivationByIdController = async (req, res) => {
     try {
         const { id } = req.params;
-        const item = await getViewCultivationByIdService(id);
+        const item = await getViewCultivationByDeviceIdService(id);
         if (!item) {
             return res.status(404).json({ success: false, message: "Cultivation not found" });
         }

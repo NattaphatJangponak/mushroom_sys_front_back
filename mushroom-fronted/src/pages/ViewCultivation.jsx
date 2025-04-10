@@ -52,6 +52,7 @@ const ViewCultivation = () => {
       console.warn("⚠️ ไม่มีค่า cultivation_id");
       return;
     }
+    
 
     try {
       const response = await axios.get(`http://localhost:5000/api/viewCultivation/${String(cultivationId)}`);
