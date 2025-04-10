@@ -5,14 +5,15 @@ import { PencilIcon, TrashIcon, PlusIcon, XIcon } from "@heroicons/react/solid";
 const PotType = () => {
     const [potTypes, setPotTypes] = useState([]);
     const [modal, setModal] = useState(false);
-    const [form, setForm] = useState({ type_pot_id: "", type_pot_name: "", description: "", status: "inactive" });
+    const [form, setForm] = useState({ type_pot_id: "", type_pot_name: "", description: "" });
+    // , status: "inactive"
     const [search, setSearch] = useState("");
 
     // ✅ โหลดข้อมูล `potType` จาก API
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/mushroom");
+                const response = await axios.get("http://49.0.81.242:5000/api/mushroom");
 
                 console.log("API Response:", response.data); // ✅ Debug ตรวจสอบ API Response
 
@@ -34,7 +35,8 @@ const PotType = () => {
     // ✅ เพิ่มหรือแก้ไขข้อมูล
     const handleAddEdit = async () => {
         try {
-            if (!form.type_pot_name || !form.description || form.status === "") {
+            if (!form.type_pot_name || !form.description ) {
+                // || form.status === ""
                 alert("Please fill in all fields");
                 return;
             }
@@ -47,13 +49,13 @@ const PotType = () => {
 
             let response;
             if (form.type_pot_id) {
-                response = await axios.put(`http://localhost:5000/api/mushroom/${form.type_pot_id}`, data);
+                response = await axios.put(`http://49.0.81.242:5000/api/mushroom/${form.type_pot_id}`, data);
             } else {
-                response = await axios.post("http://localhost:5000/api/mushroom", data);
+                response = await axios.post("http://49.0.81.242:5000/api/mushroom", data);
             }
 
             // ✅ โหลดข้อมูลใหม่หลังจากบันทึก
-            const updatedResponse = await axios.get("http://localhost:5000/api/mushroom");
+            const updatedResponse = await axios.get("http://49.0.81.242:5000/api/mushroom");
             if (updatedResponse.data.success && Array.isArray(updatedResponse.data.data)) {
                 setPotTypes(updatedResponse.data.data);
             }
@@ -71,8 +73,9 @@ const PotType = () => {
             type_pot_id: item.type_pot_id,
             type_pot_name: item.type_pot_name,
             description: item.description || "",
-            status: item.status === true ? "true" : "false"// ✅ แปลง Boolean เป็น String
+            
         });
+        // status: item.status === true ? "true" : "false"// ✅ แปลง Boolean เป็น String
         setModal(true);
     };
 
@@ -83,7 +86,7 @@ const PotType = () => {
           }
         
         try {
-            await axios.delete(`http://localhost:5000/api/mushroom/${type_pot_id}`);
+            await axios.delete(`http://49.0.81.242:5000/api/mushroom/${type_pot_id}`);
             setPotTypes((prev) => prev.filter((item) => item.type_pot_id !== type_pot_id));
         } catch (error) {
             console.error("Error deleting pot type:", error);
@@ -93,8 +96,9 @@ const PotType = () => {
     // ✅ ปิด Modal และรีเซ็ตฟอร์ม
     const closeModal = () => {
         setModal(false);
-        setForm({ type_pot_id: "", description: "", status: "inactive" });
+        setForm({ type_pot_id: "", description: "" });
     };
+    // , status: "inactive"
 
     // ✅ ค้นหาและเรียงลำดับข้อมูล
     // const filteredPotTypes = potTypes
@@ -120,7 +124,7 @@ const PotType = () => {
             <div className="flex gap-4 mb-6 w-full max-w-3xl items-center">
                 <input
                     type="text"
-                    placeholder="Search by Pot Type Name"
+                    placeholder="Search by Mushroom Name"
                     className="p-3 w-full border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -141,22 +145,24 @@ const PotType = () => {
                             {/* <th className="p-3 text-left">Pot Type ID</th> */}
                             <th className="p-3 text-left">Mushroom Name</th>
                             <th className="p-3 text-left">Description</th>
-                            <th className="p-3 text-left">Status</th>
+                            {/* <th className="p-3 text-left">Status</th> */}
                             <th className="p-3 text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredPotTypes.map(({ type_pot_id, type_pot_name, description, status }) => (
+                        {/* , status  */}
+                        {filteredPotTypes.map(({ type_pot_id, type_pot_name, description}) => (
                             <tr key={type_pot_id} className="border-t">
                                 {/* <td className="p-3">{type_pot_id}</td> */}
                                 <td className="p-3">{type_pot_name}</td>
                                 <td className="p-3">{description}</td>
-                                <td className="p-3">{status === true ? 'active' : 'inactive'}</td>
+                                {/* <td className="p-3">{status === true ? 'active' : 'inactive'}</td> */}
                                 <td className="p-3 text-center">
                                     <div className="flex justify-center gap-2">
+                                        {/* , status */}
                                         <button
                                             className="bg-blue-500 text-white p-2 rounded-lg shadow hover:bg-blue-600 transition"
-                                            onClick={() => handleEdit({ type_pot_id, type_pot_name, description, status })}
+                                            onClick={() => handleEdit({ type_pot_id, type_pot_name, description })}
                                         >
                                             <PencilIcon className="w-5 h-5" />
                                         </button>
@@ -201,14 +207,14 @@ const PotType = () => {
                             value={form.description}
                             onChange={(e) => setForm({ ...form, description: e.target.value })}
                         />
-                        <select
+                        {/* <select
                             className="w-full p-2 border rounded mb-3"
                             value={form.status}
                             onChange={(e) => setForm({ ...form, status: e.target.value })}
                         >
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
-                        </select>
+                        </select> */}
 
 
                         <div className="flex justify-end gap-2">

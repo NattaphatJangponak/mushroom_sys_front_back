@@ -1,19 +1,25 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { PencilIcon, TrashIcon, PlusIcon, XIcon } from "@heroicons/react/solid";
-
 
 const FarmType = () => {
   const [farms, setFarms] = useState([]); // เก็บข้อมูลฟาร์ม
   const [modal, setModal] = useState(false);
-  const [form, setForm] = useState({ farm_id: "", farm_name: "", farm_type: "", farm_description: "", farm_status: "inactive" });
+  const [form, setForm] = useState({
+    farm_id: "",
+    farm_name: "",
+    farm_type: "",
+    farm_description: "",
+    farm_status: "inactive",
+  });
   const [search, setSearch] = useState("");
-
+  const [selectedType, setSelectedType] = useState(""); // สำหรับกรองประเภท
+  const [selectedStatus, setSelectedStatus] = useState(""); // สำหรับกรองสถานะ
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/farm"); // โหลด farms.json
+        const response = await axios.get("http://49.0.81.242:5000/api/farm"); // โหลด farms.json
         if (Array.isArray(response.data.data)) {
           setFarms(response.data.data);
           console.log("Farms loaded:", response.data); // เช็คข้อมูลใน Console
@@ -29,22 +35,26 @@ const FarmType = () => {
     fetchData();
   }, []);
 
-
   const handleAddEdit = async () => {
     try {
-      if (!form.farm_name || !form.farm_type || !form.farm_description || !form.farm_status) {
+      if (
+        !form.farm_name ||
+        !form.farm_type ||
+        !form.farm_description ||
+        !form.farm_status
+      ) {
         alert("Please fill in all fields");
         return;
       }
 
       if (form.farm_id) {
-        await axios.put(`http://localhost:5000/api/farm/${form.farm_id}`, form);
+        await axios.put(`http://49.0.81.242:5000/api/farm/${form.farm_id}`, form);
       } else {
-        await axios.post("http://localhost:5000/api/farm", form);
+        await axios.post("http://49.0.81.242:5000/api/farm", form);
       }
 
       // โหลดข้อมูลใหม่หลังจากบันทึก
-      const response = await axios.get("http://localhost:5000/api/farm");
+      const response = await axios.get("http://49.0.81.242:5000/api/farm");
 
       // ตรวจสอบว่าข้อมูลที่ได้เป็นอาร์เรย์ก่อน setFarms
       if (Array.isArray(response.data.data)) {
@@ -56,11 +66,12 @@ const FarmType = () => {
 
       closeModal();
     } catch (error) {
-      console.error("Error saving device:", error.response ? error.response.data : error);
+      console.error(
+        "Error saving device:",
+        error.response ? error.response.data : error
+      );
     }
   };
-
-
 
   // ✅ แก้ไขข้อมูลฟาร์ม
   const handleEdit = (item) => {
@@ -94,41 +105,57 @@ const FarmType = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/farm/${farm_id}`); // เรียก API DELETE
+      await axios.delete(`http://49.0.81.242:5000/api/farm/${farm_id}`); // เรียก API DELETE
 
       // อัปเดต State ให้ UI ลบรายการออกทันที
-      setFarms((prevFarms) => prevFarms.filter((item) => item.farm_id !== farm_id));
-
-
+      setFarms((prevFarms) =>
+        prevFarms.filter((item) => item.farm_id !== farm_id)
+      );
     } catch (error) {
       console.error("Error deleting farm:", error);
-
     }
   };
 
   // ✅ ปิด Modal
   const closeModal = () => {
     setModal(false);
-    setForm({ farm_id: "", farm_name: "", farm_type: "", farm_description: "", farm_status: "inactive" });
+    setForm({
+      farm_id: "",
+      farm_name: "",
+      farm_type: "",
+      farm_description: "",
+      farm_status: "inactive",
+    });
   };
 
-  // ✅ ฟิลเตอร์การค้นหา
+  // ✅ ฟิลเตอร์การค้นหา (ปรับปรุงแล้ว)
   const filteredFarms = farms.filter(
-    ({ farm_name, farm_type, farm_status }) =>
-      farm_name.toLowerCase().includes(search.toLowerCase()) ||
-      farm_type.toLowerCase().includes(search.toLowerCase()) ||
-      farm_status.toLowerCase().includes(search.toLowerCase())
+    ({ farm_name, farm_type, farm_status }) => {
+      // กรองตาม search
+      const matchesSearch =
+        farm_name.toLowerCase().includes(search.toLowerCase()) ||
+        farm_type.toLowerCase().includes(search.toLowerCase());
+
+      // กรองตามประเภท (ถ้ามีการเลือก)
+      const matchesType = selectedType ? farm_type === selectedType : true;
+
+      // กรองตามสถานะ (แปลงสถานะให้เป็น string ก่อนเปรียบเทียบ)
+      const statusString = String(farm_status).toLowerCase();
+      const matchesStatus = selectedStatus
+        ? selectedStatus === "active"
+          ? ["true", "active", "1"].includes(statusString)
+          : ["false", "inactive", "0"].includes(statusString)
+        : true;
+
+      return matchesSearch && matchesType && matchesStatus;
+    }
   );
 
-
-
   return (
-
     <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
-
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Farm Management</h1>
-
-
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+        Farm Management
+      </h1>
 
       {/* 🔍 ค้นหาและเพิ่มข้อมูล */}
       <div className="flex gap-4 mb-6 w-full max-w-3xl items-center">
@@ -142,8 +169,8 @@ const FarmType = () => {
 
         <select
           className="p-3 border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
-        // value={selectedType}
-        // onChange={(e) => setSelectedType(e.target.value)}
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
         >
           <option value="">All Types</option>
           <option value="โรงเพาะ">โรงเพาะ</option>
@@ -152,10 +179,10 @@ const FarmType = () => {
 
         <select
           className="p-3 border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
-        // value={SelectedStatus}
-        // onChange={(e) => setSelectedStatus(e.target.value)}
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
         >
-          <option value="">All Types</option>
+          <option value="">All Status</option>
           <option value="active">ทำงาน</option>
           <option value="inactive">ไม่ทำงาน</option>
         </select>
@@ -173,7 +200,6 @@ const FarmType = () => {
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-gray-200">
-              {/* <th className="p-3 text-left">Farm ID</th> */}
               <th className="p-3 text-left">Farm Name</th>
               <th className="p-3 text-left">Farm Type</th>
               <th className="p-3 text-left">Description</th>
@@ -184,40 +210,63 @@ const FarmType = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredFarms.map(({ farm_id, farm_name, farm_type, farm_description, farm_status,temperature,humidity }) => (
-              <tr key={farm_id} className="border-t">
-                {/* <td className="p-3">{farm_id}</td> */}
-                <td className="p-3">{farm_name}</td>
-                <td className="p-3">{farm_type}</td>
-                <td className="p-3">{farm_description}</td>
-                
-                <td className="p-3">
+            {filteredFarms.map(
+              ({
+                farm_id,
+                farm_name,
+                farm_type,
+                farm_description,
+                farm_status,
+                temperature,
+                humidity
 
-                  {["true", "active", "1"].includes(String(farm_status).toLowerCase()) ? "Active" : "Inactive"}
-                </td>
-                <td className="p-3">{temperature}</td>
-                <td className="p-3">{humidity}</td>
-                <td className="p-3 text-center">
-                  <div className="flex justify-center gap-2">
-                    <button
-                      className="bg-blue-500 text-white p-2 rounded-lg shadow hover:bg-blue-600 transition"
-                      onClick={() => handleEdit({ farm_id, farm_name, farm_type })}
-                    >
-                      <PencilIcon className="w-5 h-5" />
-                    </button>
-                    <button
-                      className="bg-red-500 text-white p-2 rounded-lg shadow hover:bg-red-600 transition"
-                      onClick={() => handleDelete(farm_id)}
-                    >
-                      <TrashIcon className="w-5 h-5" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+              }) => (
+                <tr key={farm_id} className="border-t">
+                  <td className="p-3">{farm_name}</td>
+                  <td className="p-3">{farm_type}</td>
+                  <td className="p-3">{farm_description}</td>
+                  <td className="p-3">
+                    {["true", "active", "1"].includes(
+                      String(farm_status).toLowerCase()
+                    )
+                      ? "Active"
+                      : "Inactive"}
+                  </td>
+                  <td className="p-3">{temperature}</td>
+                  <td className="p-3">{humidity}</td>
+                  <td className="p-3 text-center">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        className="bg-blue-500 text-white p-2 rounded-lg shadow hover:bg-blue-600 transition"
+                        onClick={() =>
+                          handleEdit({
+                            farm_id,
+                            farm_name,
+                            farm_type,
+                            farm_description,
+                            farm_status,
+                          })
+                        }
+                      >
+                        <PencilIcon className="w-5 h-5" />
+                      </button>
+                      <button
+                        className="bg-red-500 text-white p-2 rounded-lg shadow hover:bg-red-600 transition"
+                        onClick={() => handleDelete(farm_id)}
+                      >
+                        <TrashIcon className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </td>
+               
+                </tr>
+              )
+            )}
           </tbody>
         </table>
       </div>
+
+      {/* Modal สำหรับเพิ่ม/แก้ไขข้อมูล */}
       {modal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -225,12 +274,15 @@ const FarmType = () => {
               <h2 className="text-xl font-semibold">
                 {form.farm_id ? "Edit Farm" : "Add New Farm"}
               </h2>
-              <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
+              <button
+                onClick={closeModal}
+                className="text-gray-500 hover:text-gray-700"
+              >
                 <XIcon className="w-6 h-6" />
               </button>
             </div>
 
-            {/* ✅ Input: Farm Name */}
+            {/* Input: Farm Name */}
             <input
               type="text"
               placeholder="Farm Name"
@@ -239,7 +291,7 @@ const FarmType = () => {
               onChange={(e) => setForm({ ...form, farm_name: e.target.value })}
             />
 
-            {/* ✅ Dropdown: Farm Type (เฉพาะ "โรงเพาะ" และ "โรงปลูก") */}
+            {/* Dropdown: Farm Type */}
             <select
               className="w-full p-2 border rounded mb-3"
               value={form.farm_type}
@@ -250,27 +302,31 @@ const FarmType = () => {
               <option value="โรงปลูก">โรงปลูก</option>
             </select>
 
-            {/* ✅ Input: Farm Description */}
+            {/* Input: Farm Description */}
             <textarea
               placeholder="Farm Description"
               className="w-full p-2 border rounded mb-3"
               rows="3"
               value={form.farm_description}
-              onChange={(e) => setForm({ ...form, farm_description: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, farm_description: e.target.value })
+              }
             />
 
-            {/* ✅ Dropdown: Farm Status (Active / Inactive) */}
+            {/* Dropdown: Farm Status */}
             <select
               className="w-full p-2 border rounded mb-3"
               value={form.farm_status}
-              onChange={(e) => setForm({ ...form, farm_status: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, farm_status: e.target.value })
+              }
             >
               <option value="">Select Status</option>
               <option value={true}>Active</option>
               <option value={false}>Inactive</option>
             </select>
 
-            {/* ✅ Action Buttons */}
+            {/* Action Buttons */}
             <div className="flex justify-end gap-2">
               <button
                 onClick={closeModal}
@@ -288,8 +344,6 @@ const FarmType = () => {
           </div>
         </div>
       )}
-
-
     </div>
   );
 };

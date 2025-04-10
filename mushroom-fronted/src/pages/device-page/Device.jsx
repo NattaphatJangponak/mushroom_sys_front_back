@@ -23,7 +23,7 @@ const Device = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/device");
+        const response = await axios.get("http://49.0.81.242:5000/api/device");
         setDevices(response.data.data || []);
       } catch (error) {
         console.error("Error fetching devices:", error);
@@ -43,13 +43,13 @@ const Device = () => {
       if (form.device_id) {
         const formData = { ...form };
         delete formData.farm;
-        await axios.put(`http://localhost:5000/api/device/${form.device_id}`, formData);
+        await axios.put(`http://49.0.81.242:5000/api/device/${form.device_id}`, formData);
       }
       else {
-        await axios.post("http://localhost:5000/api/device", form);
+        await axios.post("http://49.0.81.242:5000/api/device", form);
       }
 
-      const updatedDevices = await axios.get("http://localhost:5000/api/device");
+      const updatedDevices = await axios.get("http://49.0.81.242:5000/api/device");
       setDevices(updatedDevices.data.data || []);
       closeModal();
     } catch (error) {
@@ -67,7 +67,7 @@ const Device = () => {
     if (!window.confirm("Are you sure you want to delete this device?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/device/${device_id}`);
+      await axios.delete(`http://49.0.81.242:5000/api/device/${device_id}`);
       setDevices(devices.filter(item => item.device_id !== device_id));
     } catch (error) {
       console.error("Error deleting device:", error);
@@ -96,10 +96,10 @@ const Device = () => {
       (device.device_type?.toLowerCase() || "").includes(searchTerm);
 
     const deviceTypeText =
-      device.device_type === "cultivation"
-        ? "เครื่องเพาะ"
-        : device.device_type === "growing"
-          ? "เครื่องปลูก"
+      device.device_type === "โรงเพาะ"
+        ? "โรงเพาะ"
+        : device.device_type === "โรงปลูก"
+          ? "โรงปลูก"
           : "";
 
     const statusTypeText =

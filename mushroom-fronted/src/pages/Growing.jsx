@@ -29,9 +29,9 @@ const Growing = () => {
     const fetchData = async () => {
       try {
         const [devicesRes, farmsRes, growingRes] = await Promise.all([
-          axios.get("http://localhost:5000/api/device"),
-          axios.get("http://localhost:5000/api/farm"),
-          axios.get("http://localhost:5000/api/growing")
+          axios.get("http://49.0.81.242:5000/api/device"),
+          axios.get("http://49.0.81.242:5000/api/farm"),
+          axios.get("http://49.0.81.242:5000/api/growing")
         ]);
 
         console.log("Devices API Response:", devicesRes.data);
@@ -87,16 +87,16 @@ const Growing = () => {
       let response;
       if (form.id) {
         console.log("🔹 Editing cultivation with ID:", form.id);
-        response = await axios.put(`http://localhost:5000/api/growing/${form.id}`, data);
+        response = await axios.put(`http://49.0.81.242:5000/api/growing/${form.id}`, data);
       } else {
-        response = await axios.post("http://localhost:5000/api/growing", data);
+        response = await axios.post("http://49.0.81.242:5000/api/growing", data);
       }
 
       console.log("✅ API Response:", response.data);
 
       if (response.data.success === true) {
 
-        const updatedResponse = await axios.get("http://localhost:5000/api/growing");
+        const updatedResponse = await axios.get("http://49.0.81.242:5000/api/growing");
         setItems(updatedResponse.data.data);
         closeModal();
         window.location.reload();
@@ -121,7 +121,7 @@ const Growing = () => {
       return; 
     }
     try {
-      await axios.delete(`http://localhost:5000/api/growing/${id}`);
+      await axios.delete(`http://49.0.81.242:5000/api/growing/${id}`);
       setItems((prevItems) => prevItems.filter((item) => item.growing_id !== id));
     } catch (error) {
       console.error("Error deleting growing:", error);

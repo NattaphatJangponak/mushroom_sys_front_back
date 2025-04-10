@@ -19,8 +19,8 @@ const SearchBar = ({ search, setSearch, selectedType, setSelectedType, SelectedS
         onChange={(e) => setSelectedType(e.target.value)}
       >
         <option value="">All Types</option>
-        <option value="เครื่องเพาะ">เครื่องเพาะ</option>
-        <option value="เครื่องปลูก">เครื่องปลูก</option>
+        <option value="โรงเพาะ">โรงเพาะ</option>
+        <option value="โรงปลูก">โรงปลูก</option>
       </select>
 
       <select

@@ -1,42 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
-    LineChart,
-    Line,
+    BarChart,
+    Bar,
     XAxis,
     YAxis,
-    CartesianGrid,
     Tooltip,
+    Legend,
+    CartesianGrid,
     ResponsiveContainer,
-    Dot,
 } from "recharts";
-import axios from "axios";
-
-const growthRecords = [
-    { day: "Grow 01", value: 1.0 },
-    { day: "Grow 02", value: 2.5 },
-    { day: "Grow 03", value: 1.8 },
-    { day: "Grow 02", value: 1.2 },
-    { day: "Grow 01", value: 1.6 },
-    { day: "Grow 02", value: 2.8, highlight: true },
-    { day: "Grow 03", value: 1.9 },
-    { day: "Grow 02", value: 2.0 },
-    { day: "Grow 01", value: 1.5 },
-];
 
 
-const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-        return (
-            <div className="bg-white p-4 shadow-md rounded-md border border-gray-300">
-                <p className="text-gray-700 font-semibold">{`Grow ${payload[0].payload.day}`}</p>
-                <p className="text-blue-500 font-bold">{`Value: ${payload[0].value}`}</p>
-                <p className="text-gray-500">Monday, April 22nd</p>
-            </div>
-        );
-    }
-    return null;
-};
 
 
 
@@ -124,15 +101,27 @@ function HomePage() {
 
     const [activeDevices, setActiveDevices] = useState([]);
     const [inactiveDevices, setInActiveDevices] = useState(0);
-    const [deviceLogs, setDeviceLogs] = useState(0);
-    const [potLogs, setPotLogs] = useState(0);
+    const [activeFarm, setActiveFarm] = useState([]);
+    const [inactiveFarm, setInActiveFarm] = useState(0);
+
+    const [potLogs, setPotLogs] = useState([]);
 
     const [images, setImages] = useState([]);
     const [potSafe, setPotSafe] = useState(0);
     const [potDanger, setPotDanger] = useState(0);
+    const [farms, setFarms] = useState([]);
+    const [selectedFarmId, setSelectedFarmId] = useState("");
+    const [selectedFarmData, setSelectedFarmData] = useState(null);
+
 
 
     const [cultivations, setCultivations] = useState([]);
+
+    const formattedBarData = potLogs.map(log => ({
+        date: log.date,
+        "Pot Safe": log.normal_pot,
+        "Pot Danger": log.unnormal_pot
+    }));
 
 
 
@@ -141,12 +130,53 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:1880/get_active_device/");
+                const response = await axios.get("http://49.0.81.242:1880/get_active_device/");
                 const data = response.data;
+                console.log("👉 Response from /get_active_device:", response.data);
 
                 if (Array.isArray(data) && data.length > 0) {
                     setActiveDevices(data[0].active_count);
                     setInActiveDevices(data[0].inactive_count);
+                    console.log("Device counts loaded:", data[0]);
+                } else {
+                    console.error("Unexpected response format:", data);
+                }
+            } catch (error) {
+                console.error("Error fetching active devices:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        const fetchFarms = async () => {
+            try {
+                const response = await axios.get("http://49.0.81.242:5000/api/farm");
+                if (Array.isArray(response.data.data)) {
+                    setFarms(response.data.data);
+                    console.log("🌾 Farm list loaded:", response.data.data);
+                }
+            } catch (error) {
+                console.error("Error fetching farms:", error);
+            }
+        };
+
+        fetchFarms();
+    }, []);
+
+
+    //1. สำหรับ Active/Inactive Farm
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get("http://49.0.81.242:1880/get_active_farm/");
+                const data = response.data;
+                console.log("👉 Response from /get_active_device:", response.data);
+
+                if (Array.isArray(data) && data.length > 0) {
+                    setActiveFarm(data[0].active_count);
+                    setInActiveFarm(data[0].inactive_count);
                     console.log("Device counts loaded:", data[0]);
                 } else {
                     console.error("Unexpected response format:", data);
@@ -164,7 +194,7 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:1880/get_log");
+                const response = await axios.get("http://49.0.81.242:1880/get_log");
                 if (Array.isArray(response.data) && response.data.length > 0) {
                     const log = response.data[0];
                     setPotSafe(log.normal_pot);
@@ -186,7 +216,7 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:1880/get_logs");
+                const response = await axios.get("http://49.0.81.242:1880/get_logs");
                 if (Array.isArray(response.data)) {
                     setPotLogs(response.data);
                     console.log("Pot logs loaded:", response.data);
@@ -205,7 +235,7 @@ function HomePage() {
 
     // const fetchCultivations = async () => {
     //     try {
-    //         const response = await axios.get("http://localhost:5000/api/cultivation");
+    //         const response = await axios.get("http://49.0.81.242:5000/api/cultivation");
     //         console.log(response)
     //         // if (Array.isArray(response.data.data)) {
     //         //     setCultivations(response.data.data);
@@ -226,35 +256,66 @@ function HomePage() {
         danger: "red",
     };
 
-
+ 
     useEffect(() => {
-        const fetchImagesForDisplay = async () => {
-            if (!selectedCultivationId) return;
-
+        const fetchFarmImages = async () => {
+            if (!selectedFarmId) return;
+    
             try {
-                const response = await axios.get(`http://localhost:5000/api/viewCultivation/${selectedCultivationId}`);
-
-                console.log(response)
-                const allData = response.data.data || [];
-
-                const imageItems = allData
-                    .filter(item => item.img_path && item.img_path.startsWith("data:image"))
-                    .sort((a, b) => b.cultivation_pot_id - a.cultivation_pot_id)
-                    .map(item => ({
-                        src: item.img_path,
-                        status: statusToColor[item.status?.toLowerCase()] || "gray",
-                    }));
-
-                setImages(imageItems.slice(0, 4));
+                const response = await axios.get("http://49.0.81.242:1880/pic_farm");
+                const data = response.data;
+    
+                if (Array.isArray(data)) {
+                    const filtered = data
+                        .filter(item =>
+                            item.farm_id === Number(selectedFarmId) &&
+                            item.pot_img && 
+                            item.pot_img.length > 100
+                            && item.status
+                        )
+                        .map((item) => {
+                            const base64 = item.pot_img;
+                            const finalSrc = base64.startsWith("data:image")
+                                ? base64
+                                : `data:image/jpeg;base64,${base64}`;
+                            
+                            const statusColor = statusToColor[item.status?.toLowerCase()] || "gray";
+                        
+                            return {
+                                src: finalSrc,
+                                status: statusColor
+                            };
+                        });
+                        
+    
+                    console.log("✅ Final image src list:", filtered);
+                    setImages(filtered.slice(0, 4));
+                } else {
+                    console.error("❌ Unexpected data format:", data);
+                }
             } catch (err) {
-                console.error("❌ Error fetching image data:", err);
+                console.error("❌ Error fetching images from /pic_farm:", err);
             }
         };
+    
+        fetchFarmImages();
+    }, [selectedFarmId]);
+    
+    
 
-        fetchImagesForDisplay();
-    }, [selectedCultivationId]);
 
     console.log(images)
+
+    const handleSelectFarm = () => {
+        const farm = farms.find(f => f.farm_id === Number(selectedFarmId));
+        if (farm) {
+            setSelectedFarmData({
+                temperature: farm.temperature,
+                humidity: farm.humidity
+            });
+        }
+    };
+
 
     return (
         <div>
@@ -282,29 +343,48 @@ function HomePage() {
                         <div className="grid grid-cols-4 gap-2 mb-4">
                             <div className="bg-blue-500 text-white p-4 rounded text-center">
                                 <h3>Temperature</h3>
-                                <p className="text-xl font-bold">34.00°C</p>
+                                <p className="text-xl font-bold">
+                                    {selectedFarmData ? `${selectedFarmData.temperature}°C` : "N/A"}
+                                </p>
+
                             </div>
                             <div className="bg-yellow-500 text-white p-4 rounded text-center">
                                 <h3>Humidity</h3>
-                                <p className="text-xl font-bold">20.00%</p>
+                                <p className="text-xl font-bold">
+                                    {selectedFarmData ? `${selectedFarmData.humidity}%` : "N/A"}
+                                </p>
+
                             </div>
                             <div className="bg-green-500 text-white p-4 rounded text-center">
                                 <h3>Farm All Active</h3>
-                                <p className="text-xl font-bold">1</p>
+                                <p className="text-xl font-bold">{activeFarm}</p>
                             </div>
                             <div className="bg-red-500 text-white p-4 rounded text-center">
                                 <h3>Farm All Inactive</h3>
-                                <p className="text-xl font-bold">5</p>
+                                <p className="text-xl font-bold">{inactiveFarm}</p>
                             </div>
                         </div>
                         <div className="flex gap-2 mt-auto">
-                            <select className="p-2 border rounded w-full">
-                                <option>Farm Type</option>
+                            <select
+                                className="p-2 border rounded w-full"
+                                value={selectedFarmId}
+                                onChange={(e) => setSelectedFarmId(e.target.value)}
+                            >
+                                <option value="">Farm Name</option>
+                                {farms.map(farm => (
+                                    <option key={farm.farm_id} value={farm.farm_id}>
+                                        {farm.name || `Farm ${farm.farm_id}`}
+                                    </option>
+                                ))}
                             </select>
-                            <select className="p-2 border rounded w-full">
-                                <option>Farm Name</option>
-                            </select>
-                            <button className="bg-blue-600 text-white px-4 py-2 rounded">Select</button>
+
+                            <button
+                                className="bg-blue-600 text-white px-4 py-2 rounded"
+                                onClick={handleSelectFarm}
+                            >
+                                Select
+                            </button>
+
                         </div>
                     </div>
 
@@ -351,35 +431,37 @@ function HomePage() {
                                 <div className="flex gap-4 flex-wrap">
                                     {images.map((img, idx) => (
                                         <div key={idx} className="relative">
-                                            <img src={img.src} alt={`img-${idx}`} className="w-28 h-36 object-cover rounded shadow" />
+                                            <img src={img.src} alt={`farm-img-${idx}`} className="w-28 h-36 object-cover rounded shadow" />
                                             <span
                                                 className={`absolute top-1 right-1 w-3 h-3 rounded-full border border-white ${img.status === "green"
-                                                    ? "bg-green-400"
-                                                    : img.status === "yellow"
-                                                        ? "bg-yellow-400"
-                                                        : img.status === "red"
-                                                            ? "bg-red-400"
-                                                            : "bg-gray-400"
+                                                        ? "bg-green-400"
+                                                        : img.status === "yellow"
+                                                            ? "bg-yellow-400"
+                                                            : img.status === "red"
+                                                                ? "bg-red-400"
+                                                                : "bg-gray-400"
                                                     }`}
                                             />
                                         </div>
                                     ))}
                                 </div>
+
                             </div>
 
                             <div className="flex gap-2 mt-auto">
                                 <select
                                     className="p-2 border rounded w-full"
-                                    value={selectedCultivationId}
-                                    onChange={(e) => setSelectedCultivationId(e.target.value)}
+                                    value={selectedFarmId}
+                                    onChange={(e) => setSelectedFarmId(e.target.value)}
                                 >
-                                    <option value="">Select Cultivation Name</option>
-                                    {cultivations.map((item) => (
-                                        <option key={item.cultivation_id} value={item.cultivation_id}>
-                                            {item.name || `Cultivation ${item.cultivation_id}`}
+                                    <option value="">Farm Name</option>
+                                    {farms.map(farm => (
+                                        <option key={farm.farm_id} value={farm.farm_id}>
+                                            {farm.farm_name}
                                         </option>
                                     ))}
                                 </select>
+
 
 
                                 <button
@@ -394,48 +476,28 @@ function HomePage() {
 
                         {/* Right: Mushroom Overview */}
                         <div className="flex-1 max-w-[600px] border border-gray-300 rounded-md p-4 bg-white shadow-sm">
-                            <h2 className="text-md font-bold mb-2 text-center">
-                                Mashroom Overview
-                            </h2>
+                            <h2 className="text-md font-bold mb-2 text-center">Pot Overview</h2>
 
-                            <div className="h-64"> {/* เพิ่มความสูงได้ด้วย */}
+                            <div className="h-64">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <LineChart data={growthRecords}>
+                                    <BarChart data={potLogs.map(log => ({
+                                        date: log.date,
+                                        "Pot Safe": log.normal_pot,
+                                        "Pot Danger": log.unnormal_pot
+                                    }))}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="day" />
+                                        <XAxis dataKey="date" />
                                         <YAxis />
-                                        <Tooltip content={<CustomTooltip />} />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="value"
-                                            stroke="#2563eb"
-                                            dot={({ cx, cy, payload }) => (
-                                                <Dot
-                                                    cx={cx}
-                                                    cy={cy}
-                                                    r={payload.highlight ? 6 : 4}
-                                                    fill={payload.highlight ? "#2563eb" : "#d1d5db"}
-                                                    stroke={payload.highlight ? "#1e3a8a" : "none"}
-                                                />
-                                            )}
-                                        />
-                                    </LineChart>
+                                        <Tooltip />
+                                        <Legend />
+                                        <Bar dataKey="Pot Safe" fill="#22c55e" />
+                                        <Bar dataKey="Pot Danger" fill="#FF4C4C" />
+                                    </BarChart>
                                 </ResponsiveContainer>
                             </div>
-
-                            <p className="text-center mt-2 text-sm">
-                                The growth efficiency is <strong>30%</strong><br />
-                                <span className="text-xs text-gray-600">
-                                    30% Better compared to last month
-                                </span>
-                            </p>
-
-                            <div className="flex justify-center mt-3">
-                                <button className="bg-black text-white px-5 py-1 rounded hover:bg-gray-800 text-sm">
-                                    Details
-                                </button>
-                            </div>
                         </div>
+
+
                     </div>
                 </div>
 

@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     const updateUser = async (id, userData) => {
         try {
             console.log("📌 API Request - Updating user:", id, userData); // ✅ Debugging
-            const response = await axios.put(`http://localhost:5000/api/auth/update/${id}`, userData, {
+            const response = await axios.put(`http://49.0.81.242:5000/api/auth/update/${id}`, userData, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }, // ✅ ใส่ Token
             });
 
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await axios.post("http://localhost:5000/api/auth/login", { username, password });
+            const response = await axios.post("http://49.0.81.242:5000/api/auth/login", { username, password });
             const { token } = response.data;
             // console.log(username, password);
             // console.log("Login successful:", response.data);
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
     // Register function
     const register = async (username, password) => {
         try {
-            await axios.post("http://localhost:5000/api/auth/register", { username, password });
+            await axios.post("http://49.0.81.242:5000/api/auth/register", { username, password });
             return true;
         } catch (error) {
             console.error("Registration failed:", error.response?.data?.message || error.message);

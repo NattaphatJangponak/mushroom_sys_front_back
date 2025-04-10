@@ -10,7 +10,9 @@ const DeviceList = ({ devices, handleEdit, handleDelete }) => {
     }
 
     return (
+        
         <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-4">
+            
             <table className="w-full border-collapse">
                 <thead>
                     <tr className="bg-gray-100">
@@ -23,13 +25,14 @@ const DeviceList = ({ devices, handleEdit, handleDelete }) => {
                     </tr>
                 </thead>
                 <tbody>
+                    {console.log(devices)}
                     {devices.map(device => (
                         <tr key={device.device_id} className="border-t">
                             <td className="p-3">{device.device_name}</td>
                             <td className="p-3">
-                                {device.device_type === 'cultivation' ? 'เครื่องเพาะ' : 'เครื่องปลูก'}
+                                {device.device_type }
                             </td>
-                            <td className="p-3">{device.farm?.farm_name}</td>
+                            <td className="p-3">{device.Farm?.farm_name}</td>
                             <td className="p-3">{device.description}</td>
                             <td className="p-3">
                                 {["true", "active", "1"].includes(String(device.status).toLowerCase())

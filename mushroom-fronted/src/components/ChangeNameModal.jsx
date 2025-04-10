@@ -16,7 +16,7 @@ function ChangePasswordModal({ isOpen, onClose }) {
 
     const getUser = async () => {
         if (!user) { return }
-        const response = await axios.get(`http://localhost:5000/api/user/${user.username}`);
+        const response = await axios.get(`http://49.0.81.242:5000/api/user/${user.username}`);
         setUser_id(response.data.data.user_id);
     };
 
@@ -33,7 +33,7 @@ function ChangePasswordModal({ isOpen, onClose }) {
         }
 
         try {
-            const response = await axios.post("http://localhost:5000/api/user/changePassword", {
+            const response = await axios.post("http://49.0.81.242:5000/api/user/changePassword", {
                 user_id,
                 currentPassword,
                 newPassword,
