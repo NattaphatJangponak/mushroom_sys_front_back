@@ -4,18 +4,17 @@ import axios from "axios";
 
 const ViewPotForm = ({ onClose, onSubmit, defaultData = null, deviceId }) => {
   const [form, setForm] = useState({
-    pot_id:"",
+    pot_id: "",
     type_pot_id: "",
     device_id: "",
     typepot: "",
     status: "",
     pot_name: "",
     img_path: null,
-    ai_result: null
+    ai_result: null,
   });
 
   const [typePotOptions, setTypePotOptions] = useState([]);
-
 
   useEffect(() => {
     fetchTypePots();
@@ -36,22 +35,21 @@ const ViewPotForm = ({ onClose, onSubmit, defaultData = null, deviceId }) => {
       });
     } else if (!defaultData) {
       setForm({
-        pot_id:"",
+        pot_id: "",
         type_pot_id: "",
         typepot: "",
         status: "",
         pot_name: "",
         img_path: null,
-        ai_result: null
+        ai_result: null,
       });
     }
   }, [defaultData, typePotOptions]);
 
-
   const fetchTypePots = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/mushroom");
-      console.log(response)
+      console.log(response);
       if (Array.isArray(response.data.data)) {
         setTypePotOptions(response.data.data);
       } else {
@@ -66,15 +64,15 @@ const ViewPotForm = ({ onClose, onSubmit, defaultData = null, deviceId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!form.pot_name || !form.typepot || !form.status) {
       alert("Please fill in all required fields");
       return;
     }
 
     const submitData = {
-      pot_id:Number(form.pot_id),
-      type_pot_id:Number(form.type_pot_id),
+      pot_id: Number(form.pot_id),
+      type_pot_id: Number(form.type_pot_id),
       device_id: Number(form.device_id),
       typepot: Number(form.typepot),
       img_path: form.img_path || null,
@@ -130,14 +128,15 @@ const ViewPotForm = ({ onClose, onSubmit, defaultData = null, deviceId }) => {
               onChange={(e) => setForm({ ...form, typepot: e.target.value })}
               required
             >
-              <option value="" disabled>Select Pot Type</option>
+              <option value="" disabled>
+                Select Pot Type
+              </option>
               {typePotOptions.map((pot) => (
                 <option key={pot.type_pot_id} value={pot.type_pot_id}>
                   {pot.type_pot_name}
                 </option>
               ))}
             </select>
-
           </div>
 
           <div className="mb-4">
@@ -148,7 +147,9 @@ const ViewPotForm = ({ onClose, onSubmit, defaultData = null, deviceId }) => {
               onChange={(e) => setForm({ ...form, status: e.target.value })}
               required
             >
-              <option value="" disabled>Select Status</option>
+              <option value="" disabled>
+                Select Status
+              </option>
               <option value="pending">Pending</option>
               <option value="safe">Safe</option>
               <option value="danger">Danger</option>
