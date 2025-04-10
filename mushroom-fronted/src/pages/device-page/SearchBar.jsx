@@ -7,7 +7,7 @@ const SearchBar = ({ search, setSearch, selectedType, setSelectedType, SelectedS
     <div className="flex gap-4 mb-6 w-full max-w-3xl items-center">
       <input
         type="text"
-        placeholder="Search devices..."
+        placeholder="Search devices name"
         className="p-3 w-full border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
         value={search}
         onChange={(e) => setSearch(e.target.value)}

@@ -114,7 +114,7 @@ const PotType = () => {
     });
     return (
         <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
-            <h1 className="text-3xl font-semibold text-gray-800 mb-6">Pot Type Management</h1>
+            <h1 className="text-3xl font-semibold text-gray-800 mb-6">Mushroom Type Management</h1>
 
             {/* 🔍 ค้นหาและเพิ่มข้อมูล */}
             <div className="flex gap-4 mb-6 w-full max-w-3xl items-center">
@@ -139,7 +139,7 @@ const PotType = () => {
                     <thead>
                         <tr className="bg-gray-200">
                             {/* <th className="p-3 text-left">Pot Type ID</th> */}
-                            <th className="p-3 text-left">Pot Type Name</th>
+                            <th className="p-3 text-left">Mushroom Name</th>
                             <th className="p-3 text-left">Description</th>
                             <th className="p-3 text-left">Status</th>
                             <th className="p-3 text-center">Actions</th>

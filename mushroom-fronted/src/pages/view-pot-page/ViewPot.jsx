@@ -31,7 +31,7 @@ const ViewPot = () => {
 
     const getPotByDeviceID = async () => {
         try {
-            const response = await axios.get(`http://49.0.81.242:1880/get_pot_from_device/${deviceId}`);
+            const response = await axios.get(`http://localhost:1880/get_pot_from_device/${deviceId}`);
             setPots(response.data || []);
             setError(null);
         } catch (error) {
@@ -53,7 +53,7 @@ const ViewPot = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://49.0.81.242:1880/del_pot/${deviceId}/${id}`);
+            await axios.delete(`http://localhost:1880/del_pot/${deviceId}/${id}`);
             getPotByDeviceID(); // Refresh the list
         } catch (error) {
             console.error("Error deleting pot:", error);
@@ -67,14 +67,14 @@ const ViewPot = () => {
             if (formData.pot_id) {
                 // Update existing pot
                 await axios.put(
-                    `http://49.0.81.242:1880/edit_pot/${formData.pot_id}`,
+                    `http://localhost:1880/edit_pot/${formData.pot_id}`,
                     formData
                 );
 
 
             } else {
                 // Create new pot
-                await axios.post("http://49.0.81.242:1880/add_pot", {
+                await axios.post("http://localhost:1880/add_pot", {
                     ...formData,
                     device: parseInt(deviceId),
                     farm: parseInt(farmID)

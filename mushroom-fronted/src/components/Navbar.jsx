@@ -39,7 +39,7 @@ const Navbar = () => {
       <ul className="flex">
         <li className="mx-2">
           <a href="/homepage" className="nav-link">
-            HOMEPAGE
+            Homepage
           </a>
         </li>
         {/* <li className="mx-2">
@@ -62,7 +62,7 @@ const Navbar = () => {
             href="/typemushrooms"
             className="nav-link"
           >
-            <span className="ml-3">Pot Type</span>
+            <span className="ml-3">Mushroom Type</span>
           </a>
         </li>
 
@@ -132,8 +132,8 @@ const Navbar = () => {
 
 
         {/* Master Data with Dropdown */}
-        <li className="mx-2 font-title relative group">
-          <button
+        {/* <li className="mx-2 font-title relative group"> */}
+          {/* <button
             className="hover:text-white-500 transition flex items-center "
           >
             TYPEDATA
@@ -146,10 +146,10 @@ const Navbar = () => {
             >
               <path d="M10 2.586 11.414 4 6 9.414.586 4 2 2.586l4 4z" />
             </svg>
-          </button>
+          </button> */}
 
           {/* Dropdown Menu */}
-          <ul className="absolute left-0 mt-2 min-w-[240px] bg-gray-500 border border-gray-800 p-2 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transform scale-95 group-hover:scale-100 transition duration-200">
+          {/* <ul className="absolute left-0 mt-2 min-w-[240px] bg-gray-500 border border-gray-800 p-2 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transform scale-95 group-hover:scale-100 transition duration-200">
             <li>
               <a
                 href="/mushroom-cultivation"
@@ -167,8 +167,8 @@ const Navbar = () => {
               </a>
             </li>
 
-          </ul>
-        </li>
+          </ul> */}
+        {/* </li> */}
       </ul>
 
       {/* Right Section */}

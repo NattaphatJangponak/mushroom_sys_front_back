@@ -178,20 +178,25 @@ const FarmType = () => {
               <th className="p-3 text-left">Farm Type</th>
               <th className="p-3 text-left">Description</th>
               <th className="p-3 text-left">Status</th>
+              <th className="p-3 text-left">Temperature</th>
+              <th className="p-3 text-left">Humidity</th>
               <th className="p-3 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredFarms.map(({ farm_id, farm_name, farm_type, farm_description, farm_status }) => (
+            {filteredFarms.map(({ farm_id, farm_name, farm_type, farm_description, farm_status,temperature,humidity }) => (
               <tr key={farm_id} className="border-t">
                 {/* <td className="p-3">{farm_id}</td> */}
                 <td className="p-3">{farm_name}</td>
                 <td className="p-3">{farm_type}</td>
                 <td className="p-3">{farm_description}</td>
+                
                 <td className="p-3">
 
                   {["true", "active", "1"].includes(String(farm_status).toLowerCase()) ? "Active" : "Inactive"}
                 </td>
+                <td className="p-3">{temperature}</td>
+                <td className="p-3">{humidity}</td>
                 <td className="p-3 text-center">
                   <div className="flex justify-center gap-2">
                     <button

@@ -7,9 +7,6 @@ import SearchBar from "./SearchBar";
 const Device = () => {
   const [devices, setDevices] = useState([]);
   const [modal, setModal] = useState(false);
-
-
-
   const [form, setForm] = useState({
     device_id: "",
     device_name: "",
@@ -129,7 +126,7 @@ const Device = () => {
         search={search}
         setSearch={setSearch}
         selectedType={selectedType}
-        setSelectedType={selectedType}
+        setSelectedType={setSelectedType}
         SelectedStatus={selectedStatus}
         setSelectedStatus={setSelectedStatus}
         openModal={() => setModal(true)}

@@ -128,60 +128,65 @@ function HomePage() {
     const [potLogs, setPotLogs] = useState(0);
 
     const [images, setImages] = useState([]);
+    const [potSafe, setPotSafe] = useState(0);
+    const [potDanger, setPotDanger] = useState(0);
+
 
     const [cultivations, setCultivations] = useState([]);
 
- 
 
-    
+
+
     //1. สำหรับ Active/Inactive Devices
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://49.0.81.242:1880/get_active_device/");
-                console.log("TEst:", response)
-                // if (response) {
-                //     //setActiveDevices(response.data[0]);
-                //     console.log(response.data)
-                //     console.log("Active devices loaded:", response.data);
-                // } else {
-                //     console.error("Active device response is not array:", response.data);
-                //     setActiveDevices([]);
-                // }
+                const response = await axios.get("http://localhost:1880/get_active_device/");
+                const data = response.data;
+
+                if (Array.isArray(data) && data.length > 0) {
+                    setActiveDevices(data[0].active_count);
+                    setInActiveDevices(data[0].inactive_count);
+                    console.log("Device counts loaded:", data[0]);
+                } else {
+                    console.error("Unexpected response format:", data);
+                }
             } catch (error) {
                 console.error("Error fetching active devices:", error);
-                setActiveDevices([]);
             }
         };
+
         fetchData();
     }, []);
+
 
     // 2. สำหรับ pot ปกติ/ไม่ปกติ
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://49.0.81.242:1880/get_log");
-                if (Array.isArray(response.data)) {
-                    setDeviceLogs(response.data[0].normal_pot);
-                    
-                    console.log("Device logs loaded:", response.data);
+                const response = await axios.get("http://localhost:1880/get_log");
+                if (Array.isArray(response.data) && response.data.length > 0) {
+                    const log = response.data[0];
+                    setPotSafe(log.normal_pot);
+                    setPotDanger(log.unnormal_pot);
+                    console.log("Pot log data loaded:", log);
                 } else {
                     console.error("Device logs response is not array:", response.data);
-                    setDeviceLogs([]);
                 }
             } catch (error) {
                 console.error("Error fetching device logs:", error);
-                setDeviceLogs([]);
             }
         };
         fetchData();
     }, []);
 
+
+
     // 3. สำหรับ graph
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://49.0.81.242:1880/get_logs");
+                const response = await axios.get("http://localhost:1880/get_logs");
                 if (Array.isArray(response.data)) {
                     setPotLogs(response.data);
                     console.log("Pot logs loaded:", response.data);
@@ -314,28 +319,20 @@ function HomePage() {
                             </div>
                             <div className="bg-red-500 text-white p-4 rounded text-center">
                                 <h3>Device Inactive</h3>
-                                <p className="text-2xl font-bold"></p>
+                                <p className="text-2xl font-bold">{inactiveDevices}</p>
                             </div>
                             <div className="bg-green-500 text-white p-4 rounded text-center">
                                 <h3>Pot Safe</h3>
-                                <p className="text-2xl font-bold"></p>
-                                
+                                <p className="text-2xl font-bold">{potSafe}</p>
                             </div>
                             <div className="bg-yellow-500 text-white p-4 rounded text-center">
                                 <h3>Pot Danger</h3>
-                                <p className="text-2xl font-bold"></p>
+                                <p className="text-2xl font-bold">{potDanger}</p>
                             </div>
+
                         </div>
 
-                        <div className="flex gap-2 mt-auto">
-                            <select className="p-2 border rounded w-full">
-                                <option>Pot Safe: </option>
-                            </select>
-                            <select className="p-2 border rounded w-full">
-                                <option>Pot Danger: </option>
-                            </select>
-                            <button className="bg-blue-600 text-white px-4 py-2 rounded">Select</button>
-                        </div>
+
                     </div>
                 </div>
 
