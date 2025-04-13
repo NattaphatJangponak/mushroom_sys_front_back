@@ -47,13 +47,13 @@ const DeviceForm = ({
                     required
                 />
 
-                <textarea
+                {/* <textarea
                     placeholder="Description"
                     className="w-full p-2 border rounded mb-3"
                     rows="3"
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
-                />
+                /> */}
 
                 {/* Farm Selection Dropdown */}
                 <select

@@ -67,13 +67,22 @@ const Navbar = () => {
         </li>
 
         <li className="mx-2">
-              <a
-                href="/device"
-                className="nav-link"
-              >
-                <span className="ml-3">Device</span>
-              </a>
-            </li>
+          <a
+            href="/device"
+            className="nav-link"
+          >
+            <span className="ml-3">Robot</span>
+          </a>
+        </li>
+
+        <li className="mx-2">
+          <a
+            href="/user-management"
+            className="nav-link"
+          >
+            <span className="ml-3">User management</span>
+          </a>
+        </li>
 
 
 
@@ -84,7 +93,7 @@ const Navbar = () => {
         </li> */}
 
         {/* Master Data with Dropdown */}
-        
+
         {/* <li className="mx-2 font-title relative group">
           <button
             className="hover:text-white-500 transition flex items-center "
@@ -133,7 +142,7 @@ const Navbar = () => {
 
         {/* Master Data with Dropdown */}
         {/* <li className="mx-2 font-title relative group"> */}
-          {/* <button
+        {/* <button
             className="hover:text-white-500 transition flex items-center "
           >
             TYPEDATA
@@ -148,8 +157,8 @@ const Navbar = () => {
             </svg>
           </button> */}
 
-          {/* Dropdown Menu */}
-          {/* <ul className="absolute left-0 mt-2 min-w-[240px] bg-gray-500 border border-gray-800 p-2 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transform scale-95 group-hover:scale-100 transition duration-200">
+        {/* Dropdown Menu */}
+        {/* <ul className="absolute left-0 mt-2 min-w-[240px] bg-gray-500 border border-gray-800 p-2 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transform scale-95 group-hover:scale-100 transition duration-200">
             <li>
               <a
                 href="/mushroom-cultivation"

@@ -21,6 +21,8 @@ function Login() {
         console.log({username, password});
         if (success) {
             setUser(username)
+            localStorage.setItem('username', username);
+            
             navigate("/homepage");
         } else {
             alert("Login failed");

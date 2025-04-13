@@ -18,6 +18,9 @@ import Growing from "../pages/Growing";
 import ViewCultivation from "../pages/ViewCultivation";
 import ViewGrowing from "../pages/ViewGrowing";
 import ViewPot from "../pages/view-pot-page/ViewPot";
+import UserManagementPage from "../pages/user-management/user-management-page";
+import UserManagementCreateForm from "../pages/user-management/user-mamaement-create-form";
+import UserManagementEditForm from "../pages/user-management/user-management-update-form";
 
 // Main App Router
 const AppRouter = () => {
@@ -31,19 +34,22 @@ const AppRouter = () => {
 
         {/* Protected Routes */}
         {/* <Route element={<ProtectedRoute />}> */}
-          <Route path="/homepage" element={<HomePage />} />
-          <Route path="/systemOverView" element={<SystemOverView />} />
-          <Route path="/application" element={<Application />} />
-          <Route path="/rowselection" element={<RowSelectionPage />} />
-          <Route path="/potselection" element={<PotSelectionPage />} />
-          <Route path="/farmtype" element={<FarmType />} />
-          <Route path="/typemushrooms" element={<TypeMushrooms />} />
-          <Route path="/Device" element={<Device />} />
-          <Route path="/mushroom-cultivation" element={<Cultivation />} />
-          <Route path="/mushroom-cultivation/view/" element={<ViewCultivation />} />
-          <Route path="/mushroom-growing" element={<Growing />} />
-          <Route path="/mushroom-growing/view/" element={<ViewGrowing />} />
-          <Route path="/view-pot" element={<ViewPot />} />
+        <Route path="/homepage" element={<HomePage />} />
+        <Route path="/systemOverView" element={<SystemOverView />} />
+        <Route path="/application" element={<Application />} />
+        <Route path="/rowselection" element={<RowSelectionPage />} />
+        <Route path="/potselection" element={<PotSelectionPage />} />
+        <Route path="/farmtype" element={<FarmType />} />
+        <Route path="/typemushrooms" element={<TypeMushrooms />} />
+        <Route path="/Device" element={<Device />} />
+        <Route path="/mushroom-cultivation" element={<Cultivation />} />
+        <Route path="/mushroom-cultivation/view/" element={<ViewCultivation />} />
+        <Route path="/mushroom-growing" element={<Growing />} />
+        <Route path="/mushroom-growing/view/" element={<ViewGrowing />} />
+        <Route path="/view-pot" element={<ViewPot />} />
+        <Route path="/user-management" element={<UserManagementPage />} />
+        <Route path="/user-management/create" element={<UserManagementCreateForm />} />
+        <Route path="/user-management/update" element={<UserManagementEditForm />} />
 
         {/* </Route> */}
       </Routes>

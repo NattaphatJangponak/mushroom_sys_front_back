@@ -3,7 +3,18 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import ViewPotList from "./ViewPotList";
 import ViewPotForm from "./ViewPotForm";
-import { PlusIcon, XIcon } from "@heroicons/react/solid";
+import {
+  XIcon,
+  PlusIcon,
+  MinusIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/solid";
+
+
+
+
+
 
 const ViewPot = () => {
   const [searchParams] = useSearchParams();
@@ -20,6 +31,16 @@ const ViewPot = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [rotation, setRotation] = useState(90);
+  const [scale, setScale] = useState(1);
+
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = currentImage;
+    link.download = "image.jpg";
+    link.click();
+  };
+
 
   useEffect(() => {
     if (deviceId) {
@@ -99,8 +120,10 @@ const ViewPot = () => {
     return matchStatus && matchSearch;
   });
 
+
+
   return (
-    <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
+    <div className="p-8 bg-gray-100 min-h-screen flex font-title flex-col items-center">
       <h1 className="text-3xl font-semibold text-gray-800">Pot Management</h1>
       <div className="flex justify-around mt-4">
         <div className="w-full max-w-6xl flex flex-wrap justify-between items-center gap-3 mb-6">
@@ -113,7 +136,7 @@ const ViewPot = () => {
               ←
             </button>
             <h1 className="text-2xl font-semibold mr-40 text-gray-800">
-              Devices: {deviceId || "N/A"}
+              Robot: {deviceId || "N/A"}
             </h1>
           </div>
 
@@ -174,31 +197,59 @@ const ViewPot = () => {
 
       {/* Image View Modal */}
       {showImageModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-4xl max-h-[90vh] overflow-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Pot Image</h2>
-              <button
-                onClick={() => setShowImageModal(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <XIcon className="w-6 h-6" />
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center  justify-center px-4">
+          <div className="relative bg-white rounded-xl shadow-xl w-full max-w-7xl max-h-[90vh] overflow-hidden">
+
+            {/* ปุ่มปิด */}
+            <button
+              onClick={() => setShowImageModal(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
+              title="Close"
+            >
+              <XIcon className="w-6 h-6" />
+            </button>
+
+            {/* ปุ่มควบคุม */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-3 bg-white px-5 py-2 rounded-full shadow-lg z-10">
+              <button onClick={() => setRotation(rotation - 90)} title="Rotate Left">
+                <ChevronLeftIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
+              </button>
+              <button onClick={() => setRotation(rotation + 90)} title="Rotate Right">
+                <ChevronRightIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
+              </button>
+              <button onClick={() => setScale(scale + 0.2)} title="Zoom In">
+                <PlusIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
+              </button>
+              <button onClick={() => setScale(scale > 0.4 ? scale - 0.2 : 0.2)} title="Zoom Out">
+                <MinusIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
+              </button>
+              <button onClick={handleDownload} title="Download">
+                <XIcon className="w-5 h-5 text-gray-700 hover:text-green-600" />
               </button>
             </div>
-            <div className="flex justify-center">
+
+            {/* ภาพ */}
+            <div className="flex items-center justify-center w-full h-full p-4 overflow-auto">
               {currentImage ? (
                 <img
-                  src={`data:image/jpeg;base64,${currentImage}`}
-                  alt="Pot"
-                  className="max-w-full max-h-[70vh]"
+                  src={currentImage}
+                  alt="Preview"
+                  className="transition-transform duration-300 rounded-lg border"
+                  style={{
+                    transform: `rotate(${rotation}deg) scale(${scale})`,
+                    maxHeight: '80vh',
+                    maxWidth: '100%',
+                  }}
                 />
               ) : (
-                <p className="text-gray-500">No image available</p>
+                <p className="text-gray-500 text-lg">No image available</p>
               )}
             </div>
           </div>
         </div>
       )}
+
+
     </div>
   );
 };

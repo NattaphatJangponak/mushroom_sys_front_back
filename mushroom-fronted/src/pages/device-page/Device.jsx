@@ -18,20 +18,19 @@ const Device = () => {
   const [selectedType, setSelectedType] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
 
-
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://49.0.81.242:5000/api/device");
-        setDevices(response.data.data || []);
-      } catch (error) {
-        console.error("Error fetching devices:", error);
-        setDevices([]);
-      }
-    };
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://49.0.81.242:1880/get_device");
+      setDevices(response.data || []);
+    } catch (error) {
+      console.error("Error fetching devices:", error);
+      setDevices([]);
+    }
+  };
 
   const handleAddEdit = async () => {
     if (!form.device_name || !form.description || !form.status) {
@@ -50,7 +49,7 @@ const Device = () => {
       }
 
       const updatedDevices = await axios.get("http://49.0.81.242:5000/api/device");
-      setDevices(updatedDevices.data.data || []);
+      fetchData();
       closeModal();
     } catch (error) {
       console.error("Error saving device:", error.response?.data || error);
@@ -85,42 +84,39 @@ const Device = () => {
     });
   };
 
-  console.log("device_type values:", devices.map(d => d.device_type));
   const filteredDevices = devices.filter(device => {
     const searchTerm = search.toLowerCase();
-
+  
     const matchSearch =
       (device.device_id?.toString().toLowerCase() || "").includes(searchTerm) ||
       (device.device_name?.toLowerCase() || "").includes(searchTerm) ||
       (device.farm_type?.toLowerCase() || "").includes(searchTerm) ||
       (device.device_type?.toLowerCase() || "").includes(searchTerm);
-
+  
     const deviceTypeText =
-      device.device_type === "โรงเพาะ"
+      device.device_type === "cultivation"
         ? "โรงเพาะ"
-        : device.device_type === "โรงปลูก"
+        : device.device_type === "growing"
           ? "โรงปลูก"
           : "";
-
+  
     const statusTypeText =
       device.status === "active"
-        ? "active"
+        ? "หุ่นทำงาน"
         : device.status === "inactive"
-          ? "inactive"
+          ? "หุ่นไม่ทำงาน"
           : "";
-
+  
     const matchType = selectedType === "" || deviceTypeText === selectedType;
     const matchStatus = selectedStatus === "" || statusTypeText === selectedStatus;
-    // const matchType =
-    //   selectedType === "" || device.device_type === selectedType;
-    //   console.log("device_type values:", devices.map(d => d.device_type));
+  
     return matchSearch && matchType && matchStatus;
   });
-
+  
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Device Management</h1>
+    <div className="p-8 bg-gray-100 min-h-screen font-title flex flex-col items-center">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Robot Management</h1>
 
       <SearchBar
         search={search}

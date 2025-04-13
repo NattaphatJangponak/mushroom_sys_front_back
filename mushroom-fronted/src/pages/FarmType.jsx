@@ -152,7 +152,7 @@ const FarmType = () => {
   );
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
+    <div className="p-8 bg-gray-100 min-h-screen font-title flex flex-col items-center">
       <h1 className="text-3xl font-semibold text-gray-800 mb-6">
         Farm Management
       </h1>
@@ -183,8 +183,8 @@ const FarmType = () => {
           onChange={(e) => setSelectedStatus(e.target.value)}
         >
           <option value="">All Status</option>
-          <option value="active">ทำงาน</option>
-          <option value="inactive">ไม่ทำงาน</option>
+          <option value="active">โรงนี้คนใช้งาน</option>
+          <option value="inactive">โรงนี้คนไม่ใช้งาน</option>
         </select>
 
         <button
@@ -196,75 +196,79 @@ const FarmType = () => {
       </div>
 
       {/* 📊 ตารางแสดงข้อมูลฟาร์ม */}
-      <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-4">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="p-3 text-left">Farm Name</th>
-              <th className="p-3 text-left">Farm Type</th>
-              <th className="p-3 text-left">Description</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3 text-left">Temperature</th>
-              <th className="p-3 text-left">Humidity</th>
-              <th className="p-3 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredFarms.map(
-              ({
-                farm_id,
-                farm_name,
-                farm_type,
-                farm_description,
-                farm_status,
-                temperature,
-                humidity
+      <div className="w-full font-title overflow-x-auto">
+        <div className="min-w-[900px] max-w-7xl mx-auto bg-white rounded-lg shadow-md p-4">
+          <table className="w-full table-auto border-collapse">
+            <thead>
+              <tr className="bg-gray-200 text-sm text-gray-700">
+                <th className="p-3 text-left">Farm Name</th>
+                <th className="p-3 text-left">Farm Type</th>
+                <th className="p-3 text-left min-w-[200px]">Description</th>
+                <th className="p-3 text-left min-w-[160px]">Status</th>
+                <th className="p-3 text-center w-[120px]">Temperature</th>
+                <th className="p-3 text-center w-[120px]">Humidity</th>
+                <th className="p-3 text-center w-[140px]">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredFarms.map(
+                ({
+                  farm_id,
+                  farm_name,
+                  farm_type,
+                  farm_description,
+                  farm_status,
+                  temperature,
+                  humidity,
+                }) => (
+                  <tr key={farm_id} className="border-t hover:bg-gray-50 text-sm">
+                    <td className="p-3">{farm_name}</td>
+                    <td className="p-3">{farm_type}</td>
+                    <td className="p-3 max-w-[250px] truncate" title={farm_description}>
+                      {farm_description}
+                    </td>
+                    <td className="p-3 font-medium">
+                      {["true", "active", "1"].includes(String(farm_status).toLowerCase()) ? (
+                        <span className="text-green-600">โรงมีคนใช้งาน</span>
+                      ) : (
+                        <span className="text-red-600">โรงไม่มีคนใช้งาน</span>
+                      )}
+                    </td>
 
-              }) => (
-                <tr key={farm_id} className="border-t">
-                  <td className="p-3">{farm_name}</td>
-                  <td className="p-3">{farm_type}</td>
-                  <td className="p-3">{farm_description}</td>
-                  <td className="p-3">
-                    {["true", "active", "1"].includes(
-                      String(farm_status).toLowerCase()
-                    )
-                      ? "Active"
-                      : "Inactive"}
-                  </td>
-                  <td className="p-3">{temperature}</td>
-                  <td className="p-3">{humidity}</td>
-                  <td className="p-3 text-center">
-                    <div className="flex justify-center gap-2">
-                      <button
-                        className="bg-blue-500 text-white p-2 rounded-lg shadow hover:bg-blue-600 transition"
-                        onClick={() =>
-                          handleEdit({
-                            farm_id,
-                            farm_name,
-                            farm_type,
-                            farm_description,
-                            farm_status,
-                          })
-                        }
-                      >
-                        <PencilIcon className="w-5 h-5" />
-                      </button>
-                      <button
-                        className="bg-red-500 text-white p-2 rounded-lg shadow hover:bg-red-600 transition"
-                        onClick={() => handleDelete(farm_id)}
-                      >
-                        <TrashIcon className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </td>
-               
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
+                    <td className="p-3 text-center">{temperature}</td>
+                    <td className="p-3 text-center">{humidity}</td>
+                    <td className="p-3 text-center">
+                      <div className="flex justify-center gap-2">
+                        <button
+                          className="bg-blue-500 text-white p-2 rounded-lg shadow hover:bg-blue-600 transition"
+                          onClick={() =>
+                            handleEdit({
+                              farm_id,
+                              farm_name,
+                              farm_type,
+                              farm_description,
+                              farm_status,
+                            })
+                          }
+                        >
+                          <PencilIcon className="w-5 h-5" />
+                        </button>
+                        <button
+                          className="bg-red-500 text-white p-2 rounded-lg shadow hover:bg-red-600 transition"
+                          onClick={() => handleDelete(farm_id)}
+                        >
+                          <TrashIcon className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
+
 
       {/* Modal สำหรับเพิ่ม/แก้ไขข้อมูล */}
       {modal && (
@@ -322,8 +326,8 @@ const FarmType = () => {
               }
             >
               <option value="">Select Status</option>
-              <option value={true}>Active</option>
-              <option value={false}>Inactive</option>
+              <option value={true}>โรงนี้คนใช้งาน</option>
+              <option value={false}>โรงนี้คนไม่ใช้งาน</option>
             </select>
 
             {/* Action Buttons */}

@@ -35,7 +35,7 @@ const PotType = () => {
     // ✅ เพิ่มหรือแก้ไขข้อมูล
     const handleAddEdit = async () => {
         try {
-            if (!form.type_pot_name || !form.description ) {
+            if (!form.type_pot_name || !form.description) {
                 // || form.status === ""
                 alert("Please fill in all fields");
                 return;
@@ -73,7 +73,7 @@ const PotType = () => {
             type_pot_id: item.type_pot_id,
             type_pot_name: item.type_pot_name,
             description: item.description || "",
-            
+
         });
         // status: item.status === true ? "true" : "false"// ✅ แปลง Boolean เป็น String
         setModal(true);
@@ -82,9 +82,9 @@ const PotType = () => {
     // ✅ ลบข้อมูล
     const handleDelete = async (type_pot_id) => {
         if (!window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบฟาร์มนี้?")) {
-            return; 
-          }
-        
+            return;
+        }
+
         try {
             await axios.delete(`http://49.0.81.242:5000/api/mushroom/${type_pot_id}`);
             setPotTypes((prev) => prev.filter((item) => item.type_pot_id !== type_pot_id));
@@ -117,7 +117,7 @@ const PotType = () => {
         );
     });
     return (
-        <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
+        <div className="p-8 bg-gray-100 min-h-screen font-title flex flex-col items-center">
             <h1 className="text-3xl font-semibold text-gray-800 mb-6">Mushroom Type Management</h1>
 
             {/* 🔍 ค้นหาและเพิ่มข้อมูล */}
@@ -138,47 +138,48 @@ const PotType = () => {
             </div>
 
             {/* 📊 ตารางแสดงข้อมูล */}
-            <div className="w-full max-w-3xl bg-white rounded-lg shadow-md p-4">
-                <table className="w-full border-collapse">
-                    <thead>
-                        <tr className="bg-gray-200">
-                            {/* <th className="p-3 text-left">Pot Type ID</th> */}
-                            <th className="p-3 text-left">Mushroom Name</th>
-                            <th className="p-3 text-left">Description</th>
-                            {/* <th className="p-3 text-left">Status</th> */}
-                            <th className="p-3 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {/* , status  */}
-                        {filteredPotTypes.map(({ type_pot_id, type_pot_name, description}) => (
-                            <tr key={type_pot_id} className="border-t">
-                                {/* <td className="p-3">{type_pot_id}</td> */}
-                                <td className="p-3">{type_pot_name}</td>
-                                <td className="p-3">{description}</td>
-                                {/* <td className="p-3">{status === true ? 'active' : 'inactive'}</td> */}
-                                <td className="p-3 text-center">
-                                    <div className="flex justify-center gap-2">
-                                        {/* , status */}
-                                        <button
-                                            className="bg-blue-500 text-white p-2 rounded-lg shadow hover:bg-blue-600 transition"
-                                            onClick={() => handleEdit({ type_pot_id, type_pot_name, description })}
-                                        >
-                                            <PencilIcon className="w-5 h-5" />
-                                        </button>
-                                        <button
-                                            className="bg-red-500 text-white p-2 rounded-lg shadow hover:bg-red-600 transition"
-                                            onClick={() => handleDelete(type_pot_id)}
-                                        >
-                                            <TrashIcon className="w-5 h-5" />
-                                        </button>
-                                    </div>
-                                </td>
+            <div className="w-full overflow-x-auto">
+                <div className="min-w-[600px] max-w-4xl mx-auto bg-white rounded-lg shadow-md p-4   ">
+                    <table className="w-full table-auto border-collapse text-sm">
+                        <thead>
+                            <tr className="bg-gray-200 text-gray-700">
+                                <th className="p-3 text-left min-w-[160px]">Mushroom Name</th>
+                                <th className="p-3 text-left min-w-[250px]">Description</th>
+                                <th className="p-3 text-center w-[120px]">Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {filteredPotTypes.map(({ type_pot_id, type_pot_name, description }) => (
+                                <tr key={type_pot_id} className="border-t hover:bg-gray-50 ">
+                                    <td className="p-3">{type_pot_name}</td>
+                                    <td className="p-3 max-w-[300px] truncate" title={description}>
+                                        {description}
+                                    </td>
+                                    <td className="p-3 text-center">
+                                        <div className="flex justify-center gap-2">
+                                            <button
+                                                className="bg-blue-500 text-white p-2 rounded-lg shadow hover:bg-blue-600 transition"
+                                                onClick={() =>
+                                                    handleEdit({ type_pot_id, type_pot_name, description })
+                                                }
+                                            >
+                                                <PencilIcon className="w-5 h-5" />
+                                            </button>
+                                            <button
+                                                className="bg-red-500 text-white p-2 rounded-lg shadow hover:bg-red-600 transition"
+                                                onClick={() => handleDelete(type_pot_id)}
+                                            >
+                                                <TrashIcon className="w-5 h-5" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
 
             {/* 📌 Modal สำหรับเพิ่ม/แก้ไขข้อมูล */}
             {modal && (

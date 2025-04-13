@@ -5,20 +5,44 @@ import Swal from "sweetalert2";
 import { use } from "react";
 
 function ChangePasswordModal({ isOpen, onClose }) {
+    // const { user } = useContext(AuthContext);
     const { user } = useContext(AuthContext);
+    console.log(user)
+// if (!isOpen || loading) return null;
+
+    
+
+
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
-    const [user_id, setUser_id] = useState(null);
+    // const [user_id, setUser_id] = useState(null);
 
+    const user_id = user?.user_id;
+    
+    const getUser = async () => {
+        if (!user || !user.user_id) {
+            return null;
+        }
+        
+
+        try {
+            const response = await axios.get(`http://49.0.81.242:1880/user/${user.username}`);
+            console.log("📦 user info response:", response.data);
+
+            const id = response.data?.user_id || response.data?.data?.user_id;
+            if (id) {
+                setUser_id(id);
+            } else {
+                console.warn("⚠️ user_id not found in response");
+            }
+        } catch (error) {
+            console.error("❌ Error fetching user:", error.response?.data || error.message);
+        }
+    };
     useEffect(() => {
         getUser();
     }, []);
-
-    const getUser = async () => {
-        if (!user) { return }
-        const response = await axios.get(`http://49.0.81.242:5000/api/user/${user.username}`);
-        setUser_id(response.data.data.user_id);
-    };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,23 +57,32 @@ function ChangePasswordModal({ isOpen, onClose }) {
         }
 
         try {
-            const response = await axios.post("http://49.0.81.242:5000/api/user/changePassword", {
+            console.log("🔑 Submitting password change with:", {
+                user_id: user.user_id,
+                currentPassword,
+                newPassword
+            });
+
+            const response = await axios.post("http://49.0.81.242:1880/change_password", {
                 user_id,
                 currentPassword,
                 newPassword,
             });
 
-            if (response.status === 200) {
+            console.log("🔐 Password change response:", response);
+            console.log("🔐 Password change response data:", response.data);
+
+            if (response.status >= 200 && response.status < 300) {
                 Swal.fire({
                     icon: "success",
                     title: "Success",
                     text: "Password updated successfully!",
                 }).then(() => {
-                    onClose(); // Close modal after success
+                    onClose();
                 });
             }
         } catch (error) {
-            console.error("Failed to update password", error.message);
+            console.error("❌ Failed to update password:", error.response?.data || error.message);
             Swal.fire({
                 icon: "error",
                 title: "Error",
@@ -57,6 +90,7 @@ function ChangePasswordModal({ isOpen, onClose }) {
             });
         }
     };
+
 
     let username = user?.username == null ? "" : user.username;
 

@@ -7,7 +7,7 @@ const SearchBar = ({ search, setSearch, selectedType, setSelectedType, SelectedS
     <div className="flex gap-4 mb-6 w-full max-w-3xl items-center">
       <input
         type="text"
-        placeholder="Search devices name"
+        placeholder="Search robot name"
         className="p-3 w-full border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
@@ -29,8 +29,8 @@ const SearchBar = ({ search, setSearch, selectedType, setSelectedType, SelectedS
         onChange={(e) => setSelectedStatus(e.target.value)}
       >
         <option value="">All Types</option>
-        <option value="active">ทำงาน</option>
-        <option value="inactive">ไม่ทำงาน</option>
+        <option value="หุ่นทำงาน">หุ่นทำงาน</option>
+        <option value="หุ่นไม่ทำงาน">หุ่นไม่ทำงาน</option>
       </select>
 
       
