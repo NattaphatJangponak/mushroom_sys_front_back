@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import dayjs from 'dayjs';
+
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, PieChart, Pie,
     Cell, Tooltip, Legend, ResponsiveContainer
@@ -10,7 +10,7 @@ import {
 
 
 
-import { XIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon, MinusIcon ,DownloadIcon} from '@heroicons/react/solid';
+import { XIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon, MinusIcon, DownloadIcon } from '@heroicons/react/solid';
 
 
 
@@ -19,7 +19,7 @@ import { XIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon, MinusIcon ,Download
 
 function WeatherCard({ data }) {
     return (
-        <div className="bg-white shadow-xl rounded-2xl p-4 text-center transition-transform hover:scale-[1.02] w-full">
+        <div className="bg-white shadow-xl rounded-2xl p-4 text-center w-full">
             <h2 className="font-semibold text-gray-700 mb-2 text-sm">{new Date(data.dt * 1000).toLocaleDateString()}</h2>
             <img
                 src={`https://openweathermap.org/img/wn/${data.weather[0].icon}.png`}
@@ -119,13 +119,16 @@ function HomePage() {
         : images.filter((img) => img.status === statusFilter);
     const [showFullGraph, setShowFullGraph] = useState(false);
 
-    const [showPieModal, setShowPieModal] = useState(false);
-    const [pieData, setPieData] = useState([]);
+
 
     const [showImageModal, setShowImageModal] = useState(false);
     const [currentImage, setCurrentImage] = useState(null);
     const [rotation, setRotation] = useState(0);
     const [scale, setScale] = useState(1);
+    const [showFarmModal, setShowFarmModal] = useState(false);
+
+    const [showRobotModal, setShowRobotModal] = useState(false);
+
 
 
 
@@ -254,7 +257,7 @@ function HomePage() {
     const chartData = potLogs
         .sort((a, b) => new Date(a.date) - new Date(b.date))
         .map(log => ({
-            date: dayjs(log.date).format('MM/DD'), // หรือใช้ 'YYYY-MM-DD'
+            date: log.date, // หรือใช้ 'YYYY-MM-DD'
             "Pot Safe": log.normal_pot,
             "Pot Danger": log.unnormal_pot
         }));
@@ -408,7 +411,7 @@ function HomePage() {
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={chartData}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="date" angle={-45} textAnchor="end" height={60} />
+                                    <XAxis dataKey="date" angle={-45} textAnchor="end" height={60} tick={{ fontSize: 13 }} />
                                     <YAxis />
                                     <Tooltip />
                                     <Legend />
@@ -424,76 +427,106 @@ function HomePage() {
                 {/* Middle Section: Farm and Device */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
                     <div className="bg-white shadow-md rounded-lg p-4 flex flex-col h-full w-full transition-transform hover:scale-[1.02]">
-                        <h2 className="text-xl font-semibold mb-4">Farm</h2>
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            <div
-                                className="bg-blue-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 transition-transform hover:scale-[1.02] cursor-pointer"
-                                onClick={() => handleCardClick('temperature')}
-                            >
-                                <h3>Temperature</h3>
-                                <p className="text-xl font-bold">{selectedFarmData ? `${selectedFarmData.temperature}°C` : "N/A"}</p>
-                            </div>
+                        {/* Header Section (เปิด modal ได้) */}
+                        <div onClick={() => selectedFarmData && setShowFarmModal(true)} className="flex-1 cursor-pointer">
+                            <h2 className="text-xl font-semibold mb-4">Farm</h2>
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div
+                                    className="bg-blue-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCardClick('temperature');
+                                    }}
+                                >
+                                    <h3>Temperature</h3>
+                                    <p className="text-xl font-bold">
+                                        {selectedFarmData ? `${selectedFarmData.temperature}°C` : "N/A"}
+                                    </p>
+                                </div>
 
-                            <div
-                                className="bg-yellow-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 transition-transform hover:scale-[1.02] cursor-pointer"
-                                onClick={() => handleCardClick('humidity')}
-                            >
-                                <h3>Humidity</h3>
-                                <p className="text-xl font-bold">{selectedFarmData ? `${selectedFarmData.humidity}%` : "N/A"}</p>
-                            </div>
+                                <div
+                                    className="bg-yellow-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCardClick('humidity');
+                                    }}
+                                >
+                                    <h3>Humidity</h3>
+                                    <p className="text-xl font-bold">
+                                        {selectedFarmData ? `${selectedFarmData.humidity}%` : "N/A"}
+                                    </p>
+                                </div>
 
-                            {selectedFarmData ? (
-                                <>
-                                    <div className="bg-purple-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 transition-transform hover:scale-[1.02]">
-                                        <h3>Farm Type</h3>
-                                        <p className="text-xl font-bold">{selectedFarmData.farm_type}</p>
-                                    </div>
-                                    <div className="bg-indigo-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 transition-transform hover:scale-[1.02]">
-                                        <h3>Status</h3>
-                                        <p className="text-xl font-bold">{selectedFarmData.farm_status ? "Active" : "Inactive"}</p>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="bg-green-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 transition-transform hover:scale-[1.02]">
-                                        <h3>Farm All Active</h3>
-                                        <p className="text-xl font-bold">{activeFarm}/{allFarm}</p>
-                                    </div>
-                                    <div className="bg-red-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 transition-transform hover:scale-[1.02]">
-                                        <h3>Farm All Inactive</h3>
-                                        <p className="text-xl font-bold">{inactiveFarm}/{allFarm}</p>
-                                    </div>
-                                </>
-                            )}
+                                {selectedFarmData ? (
+                                    <>
+                                        <div className="bg-purple-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24">
+                                            <h3>ประเภทโรง</h3>
+                                            <p className="text-xl font-bold">{selectedFarmData.farm_type}</p>
+                                        </div>
+                                        <div className="bg-indigo-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24">
+                                            <h3>สถานะโรง</h3>
+                                            <p className="text-xl font-bold">
+                                                {selectedFarmData.farm_status ? "โรงมีคนใช้งาน" : "โรงไม่มีคนใช้งาน"}
+                                            </p>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="bg-green-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24">
+                                            <h3>โรงทั้งหมดที่ใช้งาน</h3>
+                                            <p className="text-xl font-bold">{activeFarm}/{allFarm}</p>
+                                        </div>
+                                        <div className="bg-red-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24">
+                                            <h3>โรงทั้งหมดที่ไม่ใช้งาน</h3>
+                                            <p className="text-xl font-bold">{inactiveFarm}/{allFarm}</p>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
                         </div>
-                        <div className="flex gap-2 mt-auto">
-                            <select className="p-2 border rounded w-full" value={selectedFarmId} onChange={(e) => setSelectedFarmId(e.target.value)}>
+
+                        {/* Footer Section (select farm) */}
+                        <div className="flex gap-2 mt-2">
+                            <select
+                                className="p-2 border rounded w-full"
+                                value={selectedFarmId}
+                                onChange={(e) => setSelectedFarmId(e.target.value)}
+                            >
                                 <option value="">All Farms</option>
                                 {farms.map(farm => (
                                     <option key={farm.farm_id} value={farm.farm_id}>{farm.farm_name}</option>
                                 ))}
                             </select>
-                            <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={handleSelectFarm}>Select</button>
+                            <button
+                                className="bg-blue-600 text-white px-4 py-2 rounded"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSelectFarm();
+                                }}
+                            >
+                                Select
+                            </button>
                         </div>
                     </div>
 
-                    <div className="bg-white shadow-md rounded-lg p-4 flex flex-col h-full w-full transition-transform hover:scale-[1.02]">
+
+                    <div className="bg-white shadow-md rounded-lg p-4 flex flex-col h-full w-full transition-transform hover:scale-[1.02]" onClick={() => setShowRobotModal(true)}>
                         <h2 className="text-xl font-semibold mb-4">Robot</h2>
                         <div className="grid grid-cols-2 gap-4 mb-4">
 
-                            <div className="bg-green-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 transition-transform hover:scale-[1.02]">
-                                <h3>Pot Safe</h3>
+                            <div className="bg-green-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 ">
+                                <h3>เห็ดปกติ</h3>
                                 <p className="text-xl font-bold">{potSafe}/{potSafe + potDanger}</p>
                             </div>
-                            <div className="bg-red-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 transition-transform hover:scale-[1.02]">
-                                <h3>Pot Danger</h3>
+                            <div className="bg-red-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 ">
+                                <h3>เห็ดผิดปกติ</h3>
                                 <p className="text-xl font-bold">{potDanger}/{potSafe + potDanger}</p>
                             </div>
-                            <div className="bg-green-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 transition-transform hover:scale-[1.02]">
+                            <div className="bg-green-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 ">
                                 <h3>หุ่นยนต์ทำงาน</h3>
                                 <p className="text-xl font-bold">{activeDevices}/{allDevices}</p>
                             </div>
-                            <div className="bg-red-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 transition-transform hover:scale-[1.02]">
+                            <div className="bg-red-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 ">
                                 <h3>หุ่นยนต์ไม่ทำงาน</h3>
                                 <p className="text-xl font-bold">{inactiveDevices}/{allDevices}</p>
                             </div>
@@ -509,7 +542,7 @@ function HomePage() {
                     <h2 className="text-xl font-bold mb-4">Latest Images</h2>
                     <div className="flex gap-4 flex-wrap">
                         {filteredImages.map((img, idx) => (
-                            <div key={idx} className="relative cursor-pointer" onClick={() => {
+                            <div key={idx} className="relative cursor-pointer transition-transform hover:scale-[1.02]" onClick={() => {
                                 setCurrentImage(img.src);
                                 setRotation(90); // เพราะ rotate 90 อยู่แล้ว
                                 setScale(1);
@@ -571,7 +604,7 @@ function HomePage() {
                             <ResponsiveContainer width="100%" height="90%">
                                 <LineChart data={chartData}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="date" angle={-45} textAnchor="end" height={60} />
+                                    <XAxis dataKey="date" angle={-45} textAnchor="end" height={60} tick={{ fontSize: 15 }} />
                                     <YAxis />
                                     <Tooltip />
                                     <Legend />
@@ -582,44 +615,178 @@ function HomePage() {
                         </div>
                     </div>
                 )}
-                {showPieModal && (
-                    <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center">
-                        <div className="bg-white rounded-lg shadow-lg p-6 w-[90vw] max-w-[500px] relative">
+
+                {showFarmModal && (
+                    <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center px-4">
+                        <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-3xl relative">
+
+                            {/* ปุ่มปิด */}
                             <button
+                                onClick={() => setShowFarmModal(false)}
                                 className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded"
-                                onClick={() => setShowPieModal(false)}
+                                title="Close"
                             >
                                 Close
                             </button>
-                            <h2 className="text-lg font-bold text-center mb-4">Chart</h2>
-                            <ResponsiveContainer width="100%" height={300}>
-                                <PieChart>
-                                    <Pie
-                                        data={pieData}
-                                        cx="50%"
-                                        cy="50%"
-                                        outerRadius={100}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                        label={({ name, percent }) =>
-                                            `${name} (${(percent * 100).toFixed(0)}%)`
-                                        }
-                                    >
-                                        {pieData.map((entry, index) => (
-                                            <Cell
-                                                key={`cell-${index}`}
-                                                fill={index === 0 ? "#00d9ff" : "#ccc7b6"} // เขียวอ่อนกับเหลืองอ่อน
-                                            />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip formatter={(value) => `${value}`} />
-                                    <Legend />
-                                </PieChart>
-                            </ResponsiveContainer>
 
+                            <h2 className="text-xl font-bold text-center mb-6">ข้อมูลโรงเพาะเห็ด</h2>
+
+                            {/* กราฟแสดง Temperature & Humidity */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                {/* Pie Chart - Temperature */}
+                                <div>
+                                    <h3 className="text-md font-semibold text-center mb-2">อุณหภูมิ (Temperature)</h3>
+                                    <ResponsiveContainer width="100%" height={220}>
+                                        <PieChart>
+                                            <Pie
+                                                data={[
+                                                    { name: "Temp", value: selectedFarmData.temperature },
+                                                    { name: "Remain", value: 100 - selectedFarmData.temperature },
+                                                ]}
+                                                cx="50%"
+                                                cy="50%"
+                                                outerRadius={60}
+                                                fill="#8884d8"
+                                                dataKey="value"
+                                                label={({ name, percent }) =>
+                                                    `${name} (${(percent * 100).toFixed(0)}%)`
+                                                }
+                                                labelLine={false}
+                                            >
+                                                <Cell fill="#00d9ff" />
+                                                <Cell fill="#ccc7b6" />
+                                            </Pie>
+                                            <Tooltip formatter={(value) => `${value}`} />
+                                            <Legend verticalAlign="bottom" height={36} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </div>
+
+                                {/* Pie Chart - Humidity */}
+                                <div>
+                                    <h3 className="text-md font-semibold text-center mb-2">ความชื้น (Humidity)</h3>
+                                    <ResponsiveContainer width="100%" height={220}>
+                                        <PieChart>
+                                            <Pie
+                                                data={[
+                                                    { name: "Humid", value: selectedFarmData.humidity },
+                                                    { name: "Remain", value: 100 - selectedFarmData.humidity },
+                                                ]}
+                                                cx="50%"
+                                                cy="50%"
+                                                outerRadius={60}
+                                                fill="#8884d8"
+                                                dataKey="value"
+                                                label={({ name, percent }) =>
+                                                    `${name} (${(percent * 100).toFixed(0)}%)`
+                                                }
+                                                labelLine={false}
+                                            >
+                                                <Cell fill="#fff200" />
+                                                <Cell fill="#ccc7b6" />
+                                            </Pie>
+                                            <Tooltip formatter={(value) => `${value}`} />
+                                            <Legend verticalAlign="bottom" height={36} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </div>
+
+                            {/* ข้อมูลโรง */}
+                            <div className="grid grid-cols-2 gap-4 text-center">
+                                <div className="bg-purple-100 p-4 rounded-lg">
+                                    <p className="text-sm font-medium text-gray-600">ประเภทโรง</p>
+                                    <p className="text-lg font-bold text-gray-800">
+                                        {selectedFarmData.farm_type}
+                                    </p>
+                                </div>
+                                <div className="bg-indigo-100 p-4 rounded-lg">
+                                    <p className="text-sm font-medium text-gray-600">สถานะโรง</p>
+                                    <p className="text-lg font-bold text-gray-800">
+                                        {selectedFarmData.farm_status ? "โรงมีคนใช้งาน" : "โรงไม่มีคนใช้งาน"}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
+
+                {showRobotModal && (
+                    <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center px-4">
+                        <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-3xl relative">
+                            {/* ปุ่มปิด */}
+                            <button
+                                onClick={() => setShowRobotModal(false)}
+                                className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded"
+                            >
+                                Close
+                            </button>
+
+                            <h2 className="text-xl font-bold text-center mb-6">ข้อมูลหุ่นยนต์และ Pot</h2>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                {/* PieChart - Pot */}
+                                <div>
+                                    <h3 className="text-md font-semibold text-center mb-2">Pot Status</h3>
+                                    <ResponsiveContainer width="100%" height={220}>
+                                        <PieChart>
+                                            <Pie
+                                                data={[
+                                                    { name: "Safe", value: potSafe },
+                                                    { name: "Danger", value: potDanger },
+                                                ]}
+                                                cx="50%"
+                                                cy="50%"
+                                                outerRadius={60}
+                                                fill="#8884d8"
+                                                dataKey="value"
+                                                label={({ name, percent }) =>
+                                                    `${name} (${(percent * 100).toFixed(0)}%)`
+                                                }
+                                                labelLine={false}
+                                            >
+                                                <Cell fill="#22c55e" />
+                                                <Cell fill="#ef4444" />
+                                            </Pie>
+                                            <Tooltip />
+                                            <Legend verticalAlign="bottom" height={36} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </div>
+
+                                {/* PieChart - Robot */}
+                                <div>
+                                    <h3 className="text-md font-semibold text-center mb-2">Robot Status</h3>
+                                    <ResponsiveContainer width="100%" height={220}>
+                                        <PieChart>
+                                            <Pie
+                                                data={[
+                                                    { name: "Active", value: activeDevices },
+                                                    { name: "Inactive", value: inactiveDevices },
+                                                ]}
+                                                cx="50%"
+                                                cy="50%"
+                                                outerRadius={60}
+                                                fill="#8884d8"
+                                                dataKey="value"
+                                                label={({ name, percent }) =>
+                                                    `${name} (${(percent * 100).toFixed(0)}%)`
+                                                }
+                                                labelLine={false}
+                                            >
+                                                <Cell fill="#22c55e" />
+                                                <Cell fill="#ef4444" />
+                                            </Pie>
+                                            <Tooltip />
+                                            <Legend verticalAlign="bottom" height={36} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
 
                 {showImageModal && (
                     <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center  justify-center px-4">

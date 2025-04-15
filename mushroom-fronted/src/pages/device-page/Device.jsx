@@ -33,10 +33,11 @@ const Device = () => {
   };
 
   const handleAddEdit = async () => {
-    if (!form.device_name || !form.description || !form.status) {
+    if (!form.device_name || !form.device_type || !form.status || !form.farm_id) {
       alert("Please fill in all fields");
       return;
     }
+    
 
     try {
       if (form.device_id) {

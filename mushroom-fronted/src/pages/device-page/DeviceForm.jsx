@@ -87,8 +87,9 @@ const DeviceForm = ({
                     onChange={(e) => setForm({ ...form, status: e.target.value })}
                     required
                 >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="">Select Device</option>
+                    <option value="active">หุ่นทำงาน</option>
+                    <option value="inactive">หุ่นไม่ทำงาน</option>
                 </select>
 
                 <div className="flex justify-end gap-2">
