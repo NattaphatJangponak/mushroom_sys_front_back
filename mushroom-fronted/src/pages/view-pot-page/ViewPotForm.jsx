@@ -48,7 +48,7 @@ const ViewPotForm = ({ onClose, onSubmit, defaultData = null, deviceId }) => {
 
   const fetchTypePots = async () => {
     try {
-      const response = await axios.get("http://49.0.81.242:5000/api/mushroom");
+      const response = await axios.get("http://192.168.237.130:5000/api/mushroom");
       console.log(response);
       if (Array.isArray(response.data.data)) {
         setTypePotOptions(response.data.data);

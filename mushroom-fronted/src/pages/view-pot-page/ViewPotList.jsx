@@ -50,7 +50,8 @@ const ViewPotList = ({ data, onView, onEdit, onDelete }) => {
                       <div className="flex justify-center gap-2">
                         <button
                           className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600"
-                          onClick={() => onView(item.img_path)}
+                          onClick={() => onView(item.img_path, item.img_from_ai)}
+
                           title="View"
                         >
                           <EyeIcon className="w-5 h-5" />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-
+ 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import {
@@ -151,7 +151,7 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://49.0.81.242:1880/get_active_device/");
+                const response = await axios.get("http://192.168.237.130:1880/get_active_device/");
                 const data = response.data;
                 console.log("👉 Response from /get_active_device:", response.data);
 
@@ -174,7 +174,7 @@ function HomePage() {
     useEffect(() => {
         const fetchFarms = async () => {
             try {
-                const response = await axios.get("http://49.0.81.242:5000/api/farm");
+                const response = await axios.get("http://192.168.237.130:5000/api/farm");
                 if (Array.isArray(response.data.data)) {
                     setFarms(response.data.data);
                     console.log("🌾 Farm list loaded:", response.data.data);
@@ -192,7 +192,7 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://49.0.81.242:1880/get_active_farm/");
+                const response = await axios.get("http://192.168.237.130:1880/get_active_farm/");
                 const data = response.data;
                 console.log("👉 Response from /get_active_device:", response.data);
 
@@ -217,7 +217,7 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://49.0.81.242:1880/get_log");
+                const response = await axios.get("http://192.168.237.130:1880/get_log");
                 if (Array.isArray(response.data) && response.data.length > 0) {
                     const log = response.data[0];
                     setPotSafe(log.normal_pot);
@@ -239,7 +239,7 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://49.0.81.242:1880/get_logs");
+                const response = await axios.get("http://192.168.237.130:1880/get_logs");
                 if (Array.isArray(response.data)) {
                     setPotLogs(response.data);
                     console.log("Pot logs loaded:", response.data);
@@ -265,7 +265,7 @@ function HomePage() {
 
     // const fetchCultivations = async () => {
     //     try {
-    //         const response = await axios.get("http://49.0.81.242:5000/api/cultivation");
+    //         const response = await axios.get("http://192.168.237.130:5000/api/cultivation");
     //         console.log(response)
     //         // if (Array.isArray(response.data.data)) {
     //         //     setCultivations(response.data.data);
@@ -292,7 +292,7 @@ function HomePage() {
             if (!selectedFarmId) return;
 
             try {
-                const response = await axios.get("http://49.0.81.242:1880/pic_farm");
+                const response = await axios.get("http://192.168.237.130:1880/pic_farm");
                 const data = response.data;
 
                 if (Array.isArray(data)) {

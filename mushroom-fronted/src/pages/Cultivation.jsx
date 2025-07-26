@@ -30,9 +30,9 @@ const Cultivation = () => {
     const fetchData = async () => {
       try {
         const [devicesRes, farmsRes, cultivationRes] = await Promise.all([
-          axios.get("http://49.0.81.242:5000/api/device"),
-          axios.get("http://49.0.81.242:5000/api/farm"),
-          axios.get("http://49.0.81.242:5000/api/cultivation")
+          axios.get("http://192.168.237.130:5000/api/device"),
+          axios.get("http://192.168.237.130:5000/api/farm"),
+          axios.get("http://192.168.237.130:5000/api/cultivation")
         ]);
 
         console.log("Devices API Response:", devicesRes.data);
@@ -88,16 +88,16 @@ const Cultivation = () => {
       let response;
       if (form.id) {
         console.log("🔹 Editing cultivation with ID:", form.id);
-        response = await axios.put(`http://49.0.81.242:5000/api/cultivation/${form.id}`, data);
+        response = await axios.put(`http://192.168.237.130:5000/api/cultivation/${form.id}`, data);
       } else {
-        response = await axios.post("http://49.0.81.242:5000/api/cultivation", data);
+        response = await axios.post("http://192.168.237.130:5000/api/cultivation", data);
       }
 
       console.log("✅ API Response:", response.data);
 
       if (response.data.success === true) {
 
-        const updatedResponse = await axios.get("http://49.0.81.242:5000/api/cultivation");
+        const updatedResponse = await axios.get("http://192.168.237.130:5000/api/cultivation");
         setItems(updatedResponse.data.data);
         closeModal();
         window.location.reload();
@@ -124,7 +124,7 @@ const Cultivation = () => {
       return; 
     }
     try {
-      await axios.delete(`http://49.0.81.242:5000/api/cultivation/${id}`);
+      await axios.delete(`http://192.168.237.130:5000/api/cultivation/${id}`);
       setItems((prevItems) => prevItems.filter((item) => item.cultivation_id !== id));
     } catch (error) {
       console.error("Error deleting cultivation:", error);

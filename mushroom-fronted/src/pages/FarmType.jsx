@@ -19,7 +19,7 @@ const FarmType = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://49.0.81.242:5000/api/farm"); // โหลด farms.json
+        const response = await axios.get("http://192.168.237.130:5000/api/farm"); // โหลด farms.json
         if (Array.isArray(response.data.data)) {
           setFarms(response.data.data);
           console.log("Farms loaded:", response.data); // เช็คข้อมูลใน Console
@@ -48,13 +48,13 @@ const FarmType = () => {
       }
 
       if (form.farm_id) {
-        await axios.put(`http://49.0.81.242:5000/api/farm/${form.farm_id}`, form);
+        await axios.put(`http://192.168.237.130:5000/api/farm/${form.farm_id}`, form);
       } else {
-        await axios.post("http://49.0.81.242:5000/api/farm", form);
+        await axios.post("http://192.168.237.130:5000/api/farm", form);
       }
 
       // โหลดข้อมูลใหม่หลังจากบันทึก
-      const response = await axios.get("http://49.0.81.242:5000/api/farm");
+      const response = await axios.get("http://192.168.237.130:5000/api/farm");
 
       // ตรวจสอบว่าข้อมูลที่ได้เป็นอาร์เรย์ก่อน setFarms
       if (Array.isArray(response.data.data)) {
@@ -105,7 +105,7 @@ const FarmType = () => {
     }
 
     try {
-      await axios.delete(`http://49.0.81.242:5000/api/farm/${farm_id}`); // เรียก API DELETE
+      await axios.delete(`http://192.168.237.130:5000/api/farm/${farm_id}`); // เรียก API DELETE
 
       // อัปเดต State ให้ UI ลบรายการออกทันที
       setFarms((prevFarms) =>

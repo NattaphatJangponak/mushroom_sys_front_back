@@ -26,7 +26,7 @@ function ChangePasswordModal({ isOpen, onClose }) {
         
 
         try {
-            const response = await axios.get(`http://49.0.81.242:1880/user/${user.username}`);
+            const response = await axios.get(`http://192.168.237.130:1880/user/${user.username}`);
             console.log("📦 user info response:", response.data);
 
             const id = response.data?.user_id || response.data?.data?.user_id;
@@ -63,7 +63,7 @@ function ChangePasswordModal({ isOpen, onClose }) {
                 newPassword
             });
 
-            const response = await axios.post("http://49.0.81.242:1880/change_password", {
+            const response = await axios.post("http://192.168.237.130:1880/change_password", {
                 user_id,
                 currentPassword,
                 newPassword,

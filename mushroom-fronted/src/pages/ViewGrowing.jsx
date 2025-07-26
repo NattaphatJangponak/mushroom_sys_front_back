@@ -39,7 +39,7 @@ const ViewGrowing = () => {
       return;
     }
     axios
-      .get(`http://49.0.81.242:5000/api/viewGrowing/${growingId}`)
+      .get(`http://192.168.237.130:5000/api/viewGrowing/${growingId}`)
       .then((response) => {
         console.log("✅ ViewGrowing Data:", response);
         setData(response.data.data || []);
@@ -48,7 +48,7 @@ const ViewGrowing = () => {
   }, [growingId]);
 
   // useEffect(() => {
-  //   axios.get(`http://49.0.81.242:5000/api/viewGrowing/1`)
+  //   axios.get(`http://192.168.237.130:5000/api/viewGrowing/1`)
   //     .then(response => {
   //       setImageBase64(response.data.data[0].img_path);
   //       console.log("🔹 Fetching data for growing_id:", response.data.data);
@@ -64,7 +64,7 @@ const ViewGrowing = () => {
     }
 
     try {
-      const response = await axios.get(`http://49.0.81.242:5000/api/viewGrowing/${String(growingId)}`);
+      const response = await axios.get(`http://192.168.237.130:5000/api/viewGrowing/${String(growingId)}`);
       console.log("✅ ViewGrowing Data:", response);
       setData(response.data.data || []);
     } catch (error) {
@@ -75,7 +75,7 @@ const ViewGrowing = () => {
   useEffect(() => {
     const fetchTypePots = async () => {
       try {
-        const response = await axios.get("http://49.0.81.242:5000/api/mushroom"); // ✅ เปลี่ยนเป็น API `/api/mushroom`
+        const response = await axios.get("http://192.168.237.130:5000/api/mushroom"); // ✅ เปลี่ยนเป็น API `/api/mushroom`
         console.log("✅ Type Pots Data:", response.data);
 
         // ✅ ตรวจสอบว่า response.data.data เป็นอาร์เรย์ก่อน map()
@@ -130,11 +130,11 @@ const ViewGrowing = () => {
 
       if (form.growing_pot_id) {
         alert("🔹 Editing pot with ID:");
-        response = await axios.put(`http://49.0.81.242:5000/api/viewGrowing/${form.growing_pot_id}`, data);
+        response = await axios.put(`http://192.168.237.130:5000/api/viewGrowing/${form.growing_pot_id}`, data);
       } else {
         console.log("🔹 Adding new pot");
         alert("🔹 Adding new pot");
-        response = await axios.post("http://49.0.81.242:5000/api/viewGrowing", data);
+        response = await axios.post("http://192.168.237.130:5000/api/viewGrowing", data);
       }
 
       console.log("✅ API Response:", response.data);
@@ -159,7 +159,7 @@ const ViewGrowing = () => {
       }
 
       console.log("🔹 Deleting pot with ID:", growing_pot_id);
-      const response = await axios.delete(`http://49.0.81.242:5000/api/viewGrowing/${growing_pot_id}`);
+      const response = await axios.delete(`http://192.168.237.130:5000/api/viewGrowing/${growing_pot_id}`);
 
       console.log("✅ API Response:", response.data);
       if (response.data.success === true) {
@@ -199,7 +199,7 @@ const ViewGrowing = () => {
       }
 
       // ใช้ API เดิม
-      const response = await axios.get(`http://49.0.81.242:5000/api/viewGrowing/${growingId}`);
+      const response = await axios.get(`http://192.168.237.130:5000/api/viewGrowing/${growingId}`);
 
       if (response.data.success && Array.isArray(response.data.data)) {
         // ค้นหา growing_pot_id ที่ต้องการ

@@ -13,7 +13,7 @@ const PotType = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://49.0.81.242:5000/api/mushroom");
+                const response = await axios.get("http://192.168.237.130:5000/api/mushroom");
 
                 console.log("API Response:", response.data); // ✅ Debug ตรวจสอบ API Response
 
@@ -49,13 +49,13 @@ const PotType = () => {
 
             let response;
             if (form.type_pot_id) {
-                response = await axios.put(`http://49.0.81.242:5000/api/mushroom/${form.type_pot_id}`, data);
+                response = await axios.put(`http://192.168.237.130:5000/api/mushroom/${form.type_pot_id}`, data);
             } else {
-                response = await axios.post("http://49.0.81.242:5000/api/mushroom", data);
+                response = await axios.post("http://192.168.237.130:5000/api/mushroom", data);
             }
 
             // ✅ โหลดข้อมูลใหม่หลังจากบันทึก
-            const updatedResponse = await axios.get("http://49.0.81.242:5000/api/mushroom");
+            const updatedResponse = await axios.get("http://192.168.237.130:5000/api/mushroom");
             if (updatedResponse.data.success && Array.isArray(updatedResponse.data.data)) {
                 setPotTypes(updatedResponse.data.data);
             }
@@ -86,7 +86,7 @@ const PotType = () => {
         }
 
         try {
-            await axios.delete(`http://49.0.81.242:5000/api/mushroom/${type_pot_id}`);
+            await axios.delete(`http://192.168.237.130:5000/api/mushroom/${type_pot_id}`);
             setPotTypes((prev) => prev.filter((item) => item.type_pot_id !== type_pot_id));
         } catch (error) {
             console.error("Error deleting pot type:", error);

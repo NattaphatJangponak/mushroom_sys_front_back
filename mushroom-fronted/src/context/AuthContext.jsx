@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
         const fetchUser = async () => {
             try {
-                const res = await axios.get(`http://49.0.81.242:1880/user/${username}`);
+                const res = await axios.get(`http://192.168.237.130:1880/user/${username}`);
                 console.log(res)
                 const user_id = res.data?.user_id || res.data?.data?.user_id || res.data?.data?.id;
 
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await axios.post("http://49.0.81.242:1880/login", { username, password });
+            const response = await axios.post("http://192.168.237.130:1880/login", { username, password });
             const { token } = response.data;
     
             console.log("Login successful:", response.data);
@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     
             // 🔁 ดึง user_id เพิ่มเติมจาก API
-            const userInfo = await axios.get(`http://49.0.81.242:1880/user/${username}`);
+            const userInfo = await axios.get(`http://192.168.237.130:1880/user/${username}`);
             const {user_id} = userInfo.data;// 👈 ตรวจสอบว่า API ส่งมาจริง
             console.log(user_id)
     
@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }) => {
     // Register function
     const register = async (username, password) => {
         try {
-            await axios.post("http://49.0.81.242:5000/api/auth/register", { username, password });
+            await axios.post("http://192.168.237.130:5000/api/auth/register", { username, password });
             return true;
         } catch (error) {
             console.error("Registration failed:", error.response?.data?.message || error.message);

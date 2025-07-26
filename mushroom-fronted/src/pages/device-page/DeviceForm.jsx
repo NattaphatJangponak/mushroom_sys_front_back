@@ -18,7 +18,7 @@ const DeviceForm = ({
 
     async function getAllFarms() {
         try {
-            const response = await axios.get("http://49.0.81.242:5000/api/farm");
+            const response = await axios.get("http://192.168.237.130:5000/api/farm");
             setFarms(response.data.data || []);
             console.log(response)
         } catch (error) {

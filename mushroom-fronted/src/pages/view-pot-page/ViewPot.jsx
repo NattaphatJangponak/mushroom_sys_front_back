@@ -26,13 +26,17 @@ const ViewPot = () => {
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [currentPot, setCurrentPot] = useState(null);
+
+
   const [showImageModal, setShowImageModal] = useState(false);
-  const [currentImage, setCurrentImage] = useState("");
+  const [currentImages, setCurrentImages] = useState({ robot: "", ai: "" });
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [rotation, setRotation] = useState(90);
+  const [rotation2, setRotation2] = useState(90);
   const [scale, setScale] = useState(1);
+  const [scale2, setScale2] = useState(1);
 
   const handleDownload = () => {
     const link = document.createElement("a");
@@ -51,7 +55,7 @@ const ViewPot = () => {
   const getPotByDeviceID = async () => {
     try {
       const response = await axios.get(
-        `http://49.0.81.242:1880/get_pot_from_device/${deviceId}`
+        `http://192.168.237.130:1880/get_pot_from_device/${deviceId}`
       );
       setPots(response.data || []);
       setError(null);
@@ -63,11 +67,21 @@ const ViewPot = () => {
     }
   };
 
-  const handleView = (base64) => {
-    console.log("Base64:", base64);
-    setCurrentImage(base64);
+
+
+  const handleView = (imgRobot, imgAI) => {
+    const robotSrc = imgRobot?.startsWith("data:image")
+      ? imgRobot
+      : `data:image/jpeg;base64,${imgRobot}`;
+
+    const aiSrc = imgAI?.startsWith("data:image")
+      ? imgAI
+      : `data:image/jpeg;base64,${imgAI}`;
+
+    setCurrentImages({ robot: robotSrc, ai: aiSrc });
     setShowImageModal(true);
   };
+
 
   const handleEdit = (pot) => {
     setCurrentPot(pot);
@@ -76,7 +90,7 @@ const ViewPot = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://49.0.81.242:1880/del_pot/${deviceId}/${id}`);
+      await axios.delete(`http://192.168.237.130:1880/del_pot/${deviceId}/${id}`);
       getPotByDeviceID(); // Refresh the list
     } catch (error) {
       console.error("Error deleting pot:", error);
@@ -90,12 +104,12 @@ const ViewPot = () => {
       if (formData.pot_id) {
         // Update existing pot
         await axios.put(
-          `http://49.0.81.242:1880/edit_pot/${formData.pot_id}`,
+          `http://192.168.237.130:1880/edit_pot/${formData.pot_id}`,
           formData
         );
       } else {
         // Create new pot
-        await axios.post("http://49.0.81.242:1880/add_pot", {
+        await axios.post("http://192.168.237.130:1880/add_pot", {
           ...formData,
           device: parseInt(deviceId),
           farm: parseInt(farmID),
@@ -119,6 +133,43 @@ const ViewPot = () => {
 
     return matchStatus && matchSearch;
   });
+
+
+  const rotateLeft = () => {
+    setRotation((prev) => prev - 90);
+  };
+
+  const rotateRight = () => {
+    setRotation((prev) => prev + 90);
+  };
+
+  const zoomIn = () => {
+    setScale((prev) => prev + 0.2);
+  };
+
+  const zoomOut = () => {
+    setScale((prev) => (prev > 0.4 ? prev - 0.2 : 0.2));
+  };
+
+
+  const rotateLeft2 = () => {
+    setRotation2((prev) => prev - 90);
+  };
+
+  const rotateRight2 = () => {
+    setRotation2((prev) => prev + 90);
+  };
+
+  const zoomIn2 = () => {
+    setScale2((prev) => prev + 0.2);
+  };
+
+  const zoomOut2 = () => {
+    setScale2((prev) => (prev > 0.4 ? prev - 0.2 : 0.2));
+  };
+
+
+
 
 
 
@@ -197,8 +248,8 @@ const ViewPot = () => {
 
       {/* Image View Modal */}
       {showImageModal && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center  justify-center px-4">
-          <div className="relative bg-white rounded-xl shadow-xl w-full max-w-7xl max-h-[90vh] overflow-hidden">
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center px-4">
+          <div className="relative bg-white rounded-xl shadow-xl inline-block overflow-auto">
 
             {/* ปุ่มปิด */}
             <button
@@ -210,39 +261,69 @@ const ViewPot = () => {
             </button>
 
             {/* ปุ่มควบคุม */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-3 bg-white px-5 py-2 rounded-full shadow-lg z-10">
-              <button onClick={() => setRotation(rotation - 90)} title="Rotate Left">
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-wrap justify-center gap-3 bg-white px-5 py-2 rounded-full shadow-lg z-10">
+              <button onClick={rotateLeft} title="Rotate Left">
                 <ChevronLeftIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
               </button>
-              <button onClick={() => setRotation(rotation + 90)} title="Rotate Right">
+              <button onClick={rotateRight} title="Rotate Right">
                 <ChevronRightIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
               </button>
-              <button onClick={() => setScale(scale + 0.2)} title="Zoom In">
+              <button onClick={zoomIn} title="Zoom In">
                 <PlusIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
               </button>
-              <button onClick={() => setScale(scale > 0.4 ? scale - 0.2 : 0.2)} title="Zoom Out">
+              <button onClick={zoomOut} title="Zoom Out">
                 <MinusIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
               </button>
-              <button onClick={handleDownload} title="Download">
-                <XIcon className="w-5 h-5 text-gray-700 hover:text-green-600" />
+              <hr className="my-6 border-black" />
+
+              <button onClick={rotateLeft2} title="Rotate Left AI">
+                <ChevronLeftIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
               </button>
+              <button onClick={rotateRight2} title="Rotate Right AI">
+                <ChevronRightIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
+              </button>
+              <button onClick={zoomIn2} title="Zoom In AI">
+                <PlusIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
+              </button>
+              <button onClick={zoomOut2} title="Zoom Out AI">
+                <MinusIcon className="w-5 h-5 text-gray-700 hover:text-blue-600" />
+              </button>
+
+              {/* <button onClick={handleDownload} title="Download">
+                <XIcon className="w-5 h-5 text-gray-700 hover:text-green-600" />
+              </button> */}
             </div>
 
             {/* ภาพ */}
-            <div className="flex items-center justify-center w-full h-full p-4 overflow-auto">
-              {currentImage ? (
-                <img
-                  src={currentImage}
-                  alt="Preview"
-                  className="transition-transform duration-300 rounded-lg border"
-                  style={{
-                    transform: `rotate(${rotation}deg) scale(${scale})`,
-                    maxHeight: '80vh',
-                    maxWidth: '100%',
-                  }}
-                />
-              ) : (
-                <p className="text-gray-500 text-lg">No image available</p>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 p-6">
+              {currentImages.robot && (
+                <div className="text-center">
+                  <p className="mb-2 font-semibold">ภาพจากหุ่นยนต์</p>
+                  <img
+                    src={currentImages.robot}
+                    alt="Robot"
+                    className="rounded-lg border"
+                    style={{
+                      transform: `rotate(${rotation}deg) scale(${scale})`,
+                      maxWidth: "100%",
+                    }}
+                  />
+                </div>
+              )}
+
+              {currentImages.ai && (
+                <div className="text-center">
+                  <p className="mb-2 font-semibold">ภาพจาก AI</p>
+                  <img
+                    src={currentImages.ai}
+                    alt="AI"
+                    className="rounded-lg border"
+                    style={{
+                      transform: `rotate(${rotation2}deg) scale(${scale2})`,
+                      maxWidth: "100%",
+                    }}
+                  />
+                </div>
               )}
             </div>
           </div>
