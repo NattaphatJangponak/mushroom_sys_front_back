@@ -1,6 +1,11 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 // import { jwtDecode } from "jwt-decode"; // Import jwt-decode
+// const NODE_RED_BASE = import.meta.env.VITE_NODE_RED;
+// const PRISMA_BASE = import.meta.env.VITE_PRISMA;
+
+// const BACKEND_API = import.meta.env.VITE_BACKEND_API;
+
 
 const AuthContext = createContext();
 
@@ -32,7 +37,9 @@ export const AuthProvider = ({ children }) => {
 
         const fetchUser = async () => {
             try {
-                const res = await axios.get(`http://192.168.237.130:1880/user/${username}`);
+                // const res = await axios.get(`http://172.17.64.1:1880/user/${username}`);
+                // const res = await axios.get(`${NODE_RED_BASE}/user/${username}`);
+                const res = await axios.get(`${import.meta.env.VITE_NODE_RED}/user/${username}`);
                 console.log(res)
                 const user_id = res.data?.user_id || res.data?.data?.user_id || res.data?.data?.id;
 
@@ -78,7 +85,9 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await axios.post("http://192.168.237.130:1880/login", { username, password });
+            // const response = await axios.post("http://172.17.64.1:1880/login", { username, password });
+            // const response = await axios.post(`${NODE_RED_BASE}/login`, { username, password });
+            const response = await axios.post(`${import.meta.env.VITE_NODE_RED}/login`, { username, password });
             const { token } = response.data;
     
             console.log("Login successful:", response.data);
@@ -87,7 +96,9 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     
             // 🔁 ดึง user_id เพิ่มเติมจาก API
-            const userInfo = await axios.get(`http://192.168.237.130:1880/user/${username}`);
+            // const userInfo = await axios.get(`http://172.17.64.1:1880/user/${username}`);
+            // const userInfo = await axios.get(`${NODE_RED_BASE}/user/${username}`);
+            const userInfo = await axios.get(`${import.meta.env.VITE_NODE_RED}/user/${username}`);
             const {user_id} = userInfo.data;// 👈 ตรวจสอบว่า API ส่งมาจริง
             console.log(user_id)
     
@@ -101,12 +112,17 @@ export const AuthProvider = ({ children }) => {
         }
     };
     
+
+    
     
 
     // Register function
     const register = async (username, password) => {
         try {
-            await axios.post("http://192.168.237.130:5000/api/auth/register", { username, password });
+            // await axios.post("http://172.17.64.1:5000/api/auth/register", { username, password });
+            // await axios.post(`${PRISMA_BASE}/api/auth/register`, { username, password });
+            await axios.post(`${import.meta.env.VITE_PRISMA}/register`, { username, password });
+            
             return true;
         } catch (error) {
             console.error("Registration failed:", error.response?.data?.message || error.message);

@@ -11,6 +11,7 @@ import {
   ChevronRightIcon,
 } from "@heroicons/react/solid";
 
+const NODE_RED_URL = import.meta.env.VITE_NODE_RED;
 
 
 
@@ -54,9 +55,10 @@ const ViewPot = () => {
 
   const getPotByDeviceID = async () => {
     try {
-      const response = await axios.get(
-        `http://192.168.237.130:1880/get_pot_from_device/${deviceId}`
-      );
+      // const response = await axios.get(
+      //   `http://172.17.64.1:1880/get_pot_from_device/${deviceId}`
+      // );
+        const response = await axios.get(`${NODE_RED_URL}/get_pot_from_device/${deviceId}`);
       setPots(response.data || []);
       setError(null);
     } catch (error) {
@@ -90,7 +92,8 @@ const ViewPot = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://192.168.237.130:1880/del_pot/${deviceId}/${id}`);
+      // await axios.delete(`http://172.17.64.1:1880/del_pot/${deviceId}/${id}`);
+      await axios.delete(`${NODE_RED_URL}/del_pot/${deviceId}/${id}`);
       getPotByDeviceID(); // Refresh the list
     } catch (error) {
       console.error("Error deleting pot:", error);
@@ -103,13 +106,19 @@ const ViewPot = () => {
     try {
       if (formData.pot_id) {
         // Update existing pot
-        await axios.put(
-          `http://192.168.237.130:1880/edit_pot/${formData.pot_id}`,
-          formData
-        );
+        // await axios.put(
+        //   `http://172.17.64.1:1880/edit_pot/${formData.pot_id}`,
+        //   formData
+        // );
+        await axios.put(`${NODE_RED_URL}/edit_pot/${formData.pot_id}`, formData);
       } else {
         // Create new pot
-        await axios.post("http://192.168.237.130:1880/add_pot", {
+        // await axios.post("http://172.17.64.1:1880/add_pot", {
+        //   ...formData,
+        //   device: parseInt(deviceId),
+        //   farm: parseInt(farmID),
+        // });
+        await axios.post(`${NODE_RED_URL}/add_pot`, {
           ...formData,
           device: parseInt(deviceId),
           farm: parseInt(farmID),

@@ -9,6 +9,9 @@ import {
 } from "@heroicons/react/solid";
 import { useNavigate } from "react-router-dom";
 
+const PRISMA_URL = import.meta.env.VITE_PRISMA;
+
+
 const Cultivation = () => {
   const [items, setItems] = useState([]);
   const [modal, setModal] = useState(false);
@@ -30,9 +33,12 @@ const Cultivation = () => {
     const fetchData = async () => {
       try {
         const [devicesRes, farmsRes, cultivationRes] = await Promise.all([
-          axios.get("http://192.168.237.130:5000/api/device"),
-          axios.get("http://192.168.237.130:5000/api/farm"),
-          axios.get("http://192.168.237.130:5000/api/cultivation")
+          // axios.get("http://172.17.64.1:5000/api/device"),
+          // axios.get("http://172.17.64.1:5000/api/farm"),
+          // axios.get("http://172.17.64.1:5000/api/cultivation")
+          axios.get(`${PRISMA_URL}/api/device`),
+          axios.get(`${PRISMA_URL}/api/farm`),
+          axios.get(`${PRISMA_URL}/api/cultivation`)
         ]);
 
         console.log("Devices API Response:", devicesRes.data);
@@ -88,16 +94,19 @@ const Cultivation = () => {
       let response;
       if (form.id) {
         console.log("🔹 Editing cultivation with ID:", form.id);
-        response = await axios.put(`http://192.168.237.130:5000/api/cultivation/${form.id}`, data);
+        // response = await axios.put(`http://172.17.64.1:5000/api/cultivation/${form.id}`, data);
+        response = await axios.put(`${PRISMA_URL}/api/cultivation/${form.id}`, data);
       } else {
-        response = await axios.post("http://192.168.237.130:5000/api/cultivation", data);
+        // response = await axios.post("http://172.17.64.1:5000/api/cultivation", data);
+        response = await axios.post(`${PRISMA_URL}/api/cultivation`, data);
       }
 
       console.log("✅ API Response:", response.data);
 
       if (response.data.success === true) {
 
-        const updatedResponse = await axios.get("http://192.168.237.130:5000/api/cultivation");
+        // const updatedResponse = await axios.get("http://172.17.64.1:5000/api/cultivation");
+        const updatedResponse = await axios.get(`${PRISMA_URL}/api/cultivation`);
         setItems(updatedResponse.data.data);
         closeModal();
         window.location.reload();
@@ -121,10 +130,11 @@ const Cultivation = () => {
   console.log(items)
   const handleDelete = async (id) => {
     if (!window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบฟาร์มนี้?")) {
-      return; 
+      return;
     }
     try {
-      await axios.delete(`http://192.168.237.130:5000/api/cultivation/${id}`);
+      // await axios.delete(`http://172.17.64.1:5000/api/cultivation/${id}`);
+      await axios.delete(`${PRISMA_URL}/api/cultivation/${id}`);
       setItems((prevItems) => prevItems.filter((item) => item.cultivation_id !== id));
     } catch (error) {
       console.error("Error deleting cultivation:", error);
@@ -201,7 +211,7 @@ const Cultivation = () => {
           </thead>
           <tbody>
             {filteredItems.map(
-              ({ cultivation_id, device_name, mushroom_farm_name}) => (
+              ({ cultivation_id, device_name, mushroom_farm_name }) => (
                 <tr key={cultivation_id} className="border-t">
                   <td className="p-3">{cultivation_id}</td>
                   <td className="p-3">{device_name}</td>

@@ -2,6 +2,9 @@ import { XIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const PRISMA_URL = import.meta.env.VITE_PRISMA;
+
+
 const ViewPotForm = ({ onClose, onSubmit, defaultData = null, deviceId }) => {
   const [form, setForm] = useState({
     pot_id: "",
@@ -48,7 +51,8 @@ const ViewPotForm = ({ onClose, onSubmit, defaultData = null, deviceId }) => {
 
   const fetchTypePots = async () => {
     try {
-      const response = await axios.get("http://192.168.237.130:5000/api/mushroom");
+      // const response = await axios.get("http://172.17.64.1:5000/api/mushroom");
+      const response = await axios.get(`${PRISMA_URL}/api/mushroom`);
       console.log(response);
       if (Array.isArray(response.data.data)) {
         setTypePotOptions(response.data.data);

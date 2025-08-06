@@ -9,6 +9,9 @@ import {
 } from "@heroicons/react/solid";
 import { useNavigate } from "react-router-dom";
 
+const PRISMA_URL = import.meta.env.VITE_PRISMA;
+
+
 const Growing = () => {
   const [items, setItems] = useState([]);
   const [modal, setModal] = useState(false);
@@ -29,9 +32,12 @@ const Growing = () => {
     const fetchData = async () => {
       try {
         const [devicesRes, farmsRes, growingRes] = await Promise.all([
-          axios.get("http://192.168.237.130:5000/api/device"),
-          axios.get("http://192.168.237.130:5000/api/farm"),
-          axios.get("http://192.168.237.130:5000/api/growing")
+          // axios.get("http://172.17.64.1:5000/api/device"),
+          // axios.get("http://172.17.64.1:5000/api/farm"),
+          // axios.get("http://172.17.64.1:5000/api/growing")
+          axios.get(`${PRISMA_URL}/api/device`),
+          axios.get(`${PRISMA_URL}/api/farm`),
+          axios.get(`${PRISMA_URL}/api/growing`)
         ]);
 
         console.log("Devices API Response:", devicesRes.data);
@@ -87,16 +93,19 @@ const Growing = () => {
       let response;
       if (form.id) {
         console.log("🔹 Editing cultivation with ID:", form.id);
-        response = await axios.put(`http://192.168.237.130:5000/api/growing/${form.id}`, data);
+        // response = await axios.put(`http://172.17.64.1:5000/api/growing/${form.id}`, data);
+        response = await axios.put(`${PRISMA_URL}/api/growing/${form.id}`, data);
       } else {
-        response = await axios.post("http://192.168.237.130:5000/api/growing", data);
+        // response = await axios.post("http://172.17.64.1:5000/api/growing", data);
+        response = await axios.post(`${PRISMA_URL}/api/growing`, data);
       }
 
       console.log("✅ API Response:", response.data);
 
       if (response.data.success === true) {
 
-        const updatedResponse = await axios.get("http://192.168.237.130:5000/api/growing");
+        // const updatedResponse = await axios.get("http://172.17.64.1:5000/api/growing");
+        const updatedResponse = await axios.get(`${PRISMA_URL}/api/growing`);
         setItems(updatedResponse.data.data);
         closeModal();
         window.location.reload();
@@ -121,7 +130,8 @@ const Growing = () => {
       return; 
     }
     try {
-      await axios.delete(`http://192.168.237.130:5000/api/growing/${id}`);
+      // await axios.delete(`http://172.17.64.1:5000/api/growing/${id}`);
+      await axios.delete(`${PRISMA_URL}/api/growing/${id}`);
       setItems((prevItems) => prevItems.filter((item) => item.growing_id !== id));
     } catch (error) {
       console.error("Error deleting growing:", error);

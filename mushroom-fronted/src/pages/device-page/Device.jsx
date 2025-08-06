@@ -4,6 +4,10 @@ import DeviceList from "./DeviceList";
 import DeviceForm from "./DeviceForm";
 import SearchBar from "./SearchBar";
 
+const NODE_RED_URL = import.meta.env.VITE_NODE_RED;
+const PRISMA_URL = import.meta.env.VITE_PRISMA;
+
+
 const Device = () => {
   const [devices, setDevices] = useState([]);
   const [modal, setModal] = useState(false);
@@ -24,7 +28,8 @@ const Device = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://192.168.237.130:1880/get_device");
+      // const response = await axios.get("http://172.17.64.1:1880/get_device");
+      const response = await axios.get(`${NODE_RED_URL}/get_device`);
       setDevices(response.data || []);
     } catch (error) {
       console.error("Error fetching devices:", error);
@@ -43,13 +48,16 @@ const Device = () => {
       if (form.device_id) {
         const formData = { ...form };
         delete formData.farm;
-        await axios.put(`http://192.168.237.130:5000/api/device/${form.device_id}`, formData);
+        // await axios.put(`http://172.17.64.1:5000/api/device/${form.device_id}`, formData);
+        await axios.put(`${PRISMA_URL}/api/device/${form.device_id}`, formData);
       }
       else {
-        await axios.post("http://192.168.237.130:5000/api/device", form);
+        // await axios.post("http://172.17.64.1:5000/api/device", form);
+        await axios.post(`${PRISMA_URL}/api/device`, form);
       }
 
-      const updatedDevices = await axios.get("http://192.168.237.130:5000/api/device");
+      // const updatedDevices = await axios.get("http://172.17.64.1:5000/api/device");
+      await axios.get(`${PRISMA_URL}/api/device`);
       fetchData();
       closeModal();
     } catch (error) {
@@ -67,7 +75,8 @@ const Device = () => {
     if (!window.confirm("Are you sure you want to delete this device?")) return;
 
     try {
-      await axios.delete(`http://192.168.237.130:5000/api/device/${device_id}`);
+      // await axios.delete(`http://172.17.64.1:5000/api/device/${device_id}`);
+      await axios.delete(`${PRISMA_URL}/api/device/${device_id}`);
       setDevices(devices.filter(item => item.device_id !== device_id));
     } catch (error) {
       console.error("Error deleting device:", error);

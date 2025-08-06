@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { PencilIcon, TrashIcon, PlusIcon, XIcon } from "@heroicons/react/solid";
 
+const PRISMA_BASE = import.meta.env.VITE_PRISMA;
+
+
 const PotType = () => {
     const [potTypes, setPotTypes] = useState([]);
     const [modal, setModal] = useState(false);
@@ -13,7 +16,8 @@ const PotType = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://192.168.237.130:5000/api/mushroom");
+                // const response = await axios.get("http://172.17.64.1:5000/api/mushroom");
+                const response = await axios.get(`${PRISMA_BASE}/api/mushroom`);
 
                 console.log("API Response:", response.data); // ✅ Debug ตรวจสอบ API Response
 
@@ -49,13 +53,16 @@ const PotType = () => {
 
             let response;
             if (form.type_pot_id) {
-                response = await axios.put(`http://192.168.237.130:5000/api/mushroom/${form.type_pot_id}`, data);
+                // response = await axios.put(`http://172.17.64.1:5000/api/mushroom/${form.type_pot_id}`, data);
+                response = await axios.put(`${PRISMA_BASE}/api/mushroom/${form.type_pot_id}`, data);
             } else {
-                response = await axios.post("http://192.168.237.130:5000/api/mushroom", data);
+                // response = await axios.post("http://172.17.64.1:5000/api/mushroom", data);
+                response = await axios.post(`${PRISMA_BASE}/api/mushroom`, data);
             }
 
             // ✅ โหลดข้อมูลใหม่หลังจากบันทึก
-            const updatedResponse = await axios.get("http://192.168.237.130:5000/api/mushroom");
+            // const updatedResponse = await axios.get("http://172.17.64.1:5000/api/mushroom");
+            const updatedResponse = await axios.get(`${PRISMA_BASE}/api/mushroom`);
             if (updatedResponse.data.success && Array.isArray(updatedResponse.data.data)) {
                 setPotTypes(updatedResponse.data.data);
             }
@@ -86,7 +93,8 @@ const PotType = () => {
         }
 
         try {
-            await axios.delete(`http://192.168.237.130:5000/api/mushroom/${type_pot_id}`);
+            // await axios.delete(`http://172.17.64.1:5000/api/mushroom/${type_pot_id}`);
+            await axios.delete(`${PRISMA_BASE}/api/mushroom/${type_pot_id}`);
             setPotTypes((prev) => prev.filter((item) => item.type_pot_id !== type_pot_id));
         } catch (error) {
             console.error("Error deleting pot type:", error);

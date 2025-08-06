@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { PencilIcon, TrashIcon, PlusIcon, XIcon } from "@heroicons/react/solid";
 
+const PRISMA_URL = import.meta.env.VITE_PRISMA;
+
+
 const FarmType = () => {
   const [farms, setFarms] = useState([]); // เก็บข้อมูลฟาร์ม
   const [modal, setModal] = useState(false);
@@ -19,7 +22,8 @@ const FarmType = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://192.168.237.130:5000/api/farm"); // โหลด farms.json
+        // const response = await axios.get("http://172.17.64.1:5000/api/farm"); // โหลด farms.json
+        const response = await axios.get(`${PRISMA_URL}/api/farm`); // โหลด farms.json
         if (Array.isArray(response.data.data)) {
           setFarms(response.data.data);
           console.log("Farms loaded:", response.data); // เช็คข้อมูลใน Console
@@ -48,13 +52,16 @@ const FarmType = () => {
       }
 
       if (form.farm_id) {
-        await axios.put(`http://192.168.237.130:5000/api/farm/${form.farm_id}`, form);
+        // await axios.put(`http://172.17.64.1:5000/api/farm/${form.farm_id}`, form);
+        await axios.put(`${PRISMA_URL}/api/farm/${form.farm_id}`, form);
       } else {
-        await axios.post("http://192.168.237.130:5000/api/farm", form);
+        // await axios.post("http://172.17.64.1:5000/api/farm", form);
+        await axios.post(`${PRISMA_URL}/api/farm`, form);
       }
 
       // โหลดข้อมูลใหม่หลังจากบันทึก
-      const response = await axios.get("http://192.168.237.130:5000/api/farm");
+      // const response = await axios.get("http://172.17.64.1:5000/api/farm");
+      const response = await axios.get(`${PRISMA_URL}/api/farm`);
 
       // ตรวจสอบว่าข้อมูลที่ได้เป็นอาร์เรย์ก่อน setFarms
       if (Array.isArray(response.data.data)) {
@@ -105,7 +112,8 @@ const FarmType = () => {
     }
 
     try {
-      await axios.delete(`http://192.168.237.130:5000/api/farm/${farm_id}`); // เรียก API DELETE
+      // await axios.delete(`http://172.17.64.1:5000/api/farm/${farm_id}`); // เรียก API DELETE
+      await axios.delete(`${PRISMA_URL}/api/farm/${farm_id}`); // เรียก API DELETE
 
       // อัปเดต State ให้ UI ลบรายการออกทันที
       setFarms((prevFarms) =>

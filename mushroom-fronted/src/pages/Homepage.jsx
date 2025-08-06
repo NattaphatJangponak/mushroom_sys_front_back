@@ -12,6 +12,8 @@ import {
 
 import { XIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon, MinusIcon, DownloadIcon } from '@heroicons/react/solid';
 
+const NODE_RED_BASE = import.meta.env.VITE_NODE_RED;
+const PRISMA_BASE = import.meta.env.VITE_PRISMA;
 
 
 
@@ -151,7 +153,8 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://192.168.237.130:1880/get_active_device/");
+                // const response = await axios.get("http://172.17.64.1:1880/get_active_device/");
+                const response = await axios.get(`${NODE_RED_BASE}/get_active_device/`);
                 const data = response.data;
                 console.log("👉 Response from /get_active_device:", response.data);
 
@@ -174,7 +177,8 @@ function HomePage() {
     useEffect(() => {
         const fetchFarms = async () => {
             try {
-                const response = await axios.get("http://192.168.237.130:5000/api/farm");
+                // const response = await axios.get("http://172.17.64.1:5000/api/farm");
+                const response = await axios.get(`${PRISMA_BASE}/api/farm`);
                 if (Array.isArray(response.data.data)) {
                     setFarms(response.data.data);
                     console.log("🌾 Farm list loaded:", response.data.data);
@@ -192,7 +196,8 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://192.168.237.130:1880/get_active_farm/");
+                // const response = await axios.get("http://172.17.64.1:1880/get_active_farm/");
+                const response = await axios.get(`${NODE_RED_BASE}/get_active_farm/`);
                 const data = response.data;
                 console.log("👉 Response from /get_active_device:", response.data);
 
@@ -217,7 +222,8 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://192.168.237.130:1880/get_log");
+                // const response = await axios.get("http://172.17.64.1:1880/get_log");
+                const response = await axios.get(`${NODE_RED_BASE}/get_log`);
                 if (Array.isArray(response.data) && response.data.length > 0) {
                     const log = response.data[0];
                     setPotSafe(log.normal_pot);
@@ -239,7 +245,8 @@ function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://192.168.237.130:1880/get_logs");
+                // const response = await axios.get("http://172.17.64.1:1880/get_logs");
+                const response = await axios.get(`${NODE_RED_BASE}/get_logs`);
                 if (Array.isArray(response.data)) {
                     setPotLogs(response.data);
                     console.log("Pot logs loaded:", response.data);
@@ -265,7 +272,7 @@ function HomePage() {
 
     // const fetchCultivations = async () => {
     //     try {
-    //         const response = await axios.get("http://192.168.237.130:5000/api/cultivation");
+    //         const response = await axios.get("http://172.17.64.1:5000/api/cultivation");
     //         console.log(response)
     //         // if (Array.isArray(response.data.data)) {
     //         //     setCultivations(response.data.data);
@@ -292,7 +299,8 @@ function HomePage() {
             if (!selectedFarmId) return;
 
             try {
-                const response = await axios.get("http://192.168.237.130:1880/pic_farm");
+                // const response = await axios.get("http://172.17.64.1:1880/pic_farm");
+                const response = await axios.get(`${NODE_RED_BASE}/pic_farm`);
                 const data = response.data;
 
                 if (Array.isArray(data)) {

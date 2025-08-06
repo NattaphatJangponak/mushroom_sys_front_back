@@ -3,6 +3,7 @@ import AuthContext from "../context/AuthContext";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { use } from "react";
+// const NODE_RED_BASE = import.meta.env.VITE_NODE_RED;
 
 function ChangePasswordModal({ isOpen, onClose }) {
     // const { user } = useContext(AuthContext);
@@ -26,7 +27,9 @@ function ChangePasswordModal({ isOpen, onClose }) {
         
 
         try {
-            const response = await axios.get(`http://192.168.237.130:1880/user/${user.username}`);
+            // const response = await axios.get(`http://172.17.64.1:1880/user/${user.username}`);
+            // const response = await axios.get(`${NODE_RED_BASE}/user/${user.username}`);
+            const response = await axios.get(`${import.meta.env.VITE_NODE_RED}/user/${user.username}`);
             console.log("📦 user info response:", response.data);
 
             const id = response.data?.user_id || response.data?.data?.user_id;
@@ -63,12 +66,21 @@ function ChangePasswordModal({ isOpen, onClose }) {
                 newPassword
             });
 
-            const response = await axios.post("http://192.168.237.130:1880/change_password", {
+            // const response = await axios.post("http://172.17.64.1:1880/change_password", {
+            //     user_id,
+            //     currentPassword,
+            //     newPassword,
+            // });
+            // const response = await axios.post(`${NODE_RED_BASE}/change_password`, {
+            //      user_id,
+            //     currentPassword,
+            //     newPassword,
+            // });
+            const response = await axios.post(`${import.meta.env.VITE_NODE_RED}/change_password`, {
                 user_id,
                 currentPassword,
                 newPassword,
             });
-
             console.log("🔐 Password change response:", response);
             console.log("🔐 Password change response data:", response.data);
 

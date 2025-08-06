@@ -2,6 +2,9 @@ import { XIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const PRISMA_URL = import.meta.env.VITE_PRISMA;
+
+
 const DeviceForm = ({
     form,
     setForm,
@@ -18,7 +21,9 @@ const DeviceForm = ({
 
     async function getAllFarms() {
         try {
-            const response = await axios.get("http://192.168.237.130:5000/api/farm");
+            // const response = await axios.get("http://172.17.64.1:5000/api/farm");
+            const response = await axios.get(`${PRISMA_URL}/api/farm`);
+
             setFarms(response.data.data || []);
             console.log(response)
         } catch (error) {
