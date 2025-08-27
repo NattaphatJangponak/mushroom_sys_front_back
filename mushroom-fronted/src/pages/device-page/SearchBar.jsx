@@ -2,19 +2,19 @@
 
 import { PlusIcon } from "@heroicons/react/solid";
 
-const SearchBar = ({ search, setSearch, selectedType, setSelectedType, SelectedStatus,setSelectedStatus,openModal }) => {
+const SearchBar = ({ search, setSearch, selectedType, setSelectedType, SelectedStatus, setSelectedStatus, openModal }) => {
   return (
-    <div className="flex gap-4 mb-6 w-full max-w-3xl items-center">
+    <div className="flex flex-col sm:flex-row gap-4 mb-6 w-full max-w-3xl items-center">
       <input
         type="text"
         placeholder="Search robot name"
-        className="p-3 w-full border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
+        className="p-3 w-full sm:w-2/3 border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
       <select
-        className="p-3 border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
+        className="p-3 w-full sm:w-1/3 border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
         value={selectedType}
         onChange={(e) => setSelectedType(e.target.value)}
       >
@@ -24,7 +24,7 @@ const SearchBar = ({ search, setSearch, selectedType, setSelectedType, SelectedS
       </select>
 
       <select
-        className="p-3 border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
+        className="p-3 w-full sm:w-1/3 border rounded-lg shadow-sm focus:ring focus:ring-blue-200"
         value={SelectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value)}
       >
@@ -33,15 +33,14 @@ const SearchBar = ({ search, setSearch, selectedType, setSelectedType, SelectedS
         <option value="หุ่นไม่ทำงาน">หุ่นไม่ทำงาน</option>
       </select>
 
-      
-
       <button
         onClick={openModal}
-        className="bg-blue-500 text-white p-3 rounded-lg shadow-md hover:bg-blue-600 transition"
+         className="bg-blue-500 text-white p-3 rounded-lg shadow-md hover:bg-blue-600 transition mt-4 sm:mt-0 flex justify-center items-center w-full sm:w-auto"
       >
-        <PlusIcon className="w-5 h-5" />
+        <PlusIcon className="w-6 h-6 sm:w-5 sm:h-5" />
       </button>
     </div>
+
   );
 };
 

@@ -809,6 +809,7 @@ function HomePage() {
                                 <XIcon className="w-6 h-6" />
                             </button>
 
+
                             {/* ปุ่มควบคุม */}
                             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-3 bg-white px-5 py-2 rounded-full shadow-lg z-10">
                                 <button onClick={() => setRotation(rotation - 90)} title="Rotate Left">
