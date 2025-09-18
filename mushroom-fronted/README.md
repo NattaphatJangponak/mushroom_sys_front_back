@@ -41,3 +41,7 @@ server {
 // Run
 docker build -t my-frontend .
 docker run -d -p 3004:80 --name frontend my-frontend
+
+// Stop
+docker stop frontend
+docker rm frontend
