@@ -38,9 +38,9 @@ const DeviceList = ({ devices, handleEdit, handleDelete }) => {
                                 <td className="p-3">{device.farm_name}</td>
                                 <td className="p-3 font-medium">
                                     {["true", "active", "1"].includes(String(device.status).toLowerCase()) ? (
-                                        <span className="text-green-600">หุ่นทำงาน</span>
+                                        <span className="text-green-600">Robot active</span>
                                     ) : (
-                                        <span className="text-red-600">หุ่นไม่ทำงาน</span>
+                                        <span className="text-red-600">Robot inactive</span>
                                     )}
                                 </td>
                                 <td className="p-3 text-center">

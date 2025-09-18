@@ -91,6 +91,7 @@ const ViewPot = () => {
   };
 
   const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this device?")) return;
     try {
       // await axios.delete(`http://172.17.64.1:1880/del_pot/${deviceId}/${id}`);
       await axios.delete(`${NODE_RED_URL}/del_pot/${deviceId}/${id}`);
@@ -307,7 +308,7 @@ const ViewPot = () => {
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 p-6">
               {currentImages.robot && (
                 <div className="text-center">
-                  <p className="mb-2 font-semibold">ภาพจากหุ่นยนต์</p>
+                  <p className="mb-2 font-semibold">ภาพจาก Robot</p>
                   <img
                     src={currentImages.robot}
                     alt="Robot"

@@ -531,11 +531,11 @@ function HomePage() {
                                 <p className="text-xl font-bold">{potDanger}/{potSafe + potDanger}</p>
                             </div>
                             <div className="bg-green-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 ">
-                                <h3>หุ่นยนต์ทำงาน</h3>
+                                <h3>Robot ทำงาน</h3>
                                 <p className="text-xl font-bold">{activeDevices}/{allDevices}</p>
                             </div>
                             <div className="bg-red-500 text-white p-4 rounded text-center flex flex-col items-center justify-center h-24 ">
-                                <h3>หุ่นยนต์ไม่ทำงาน</h3>
+                                <h3>Robot ไม่ทำงาน</h3>
                                 <p className="text-xl font-bold">{inactiveDevices}/{allDevices}</p>
                             </div>
                         </div>
@@ -730,7 +730,7 @@ function HomePage() {
                                 Close
                             </button>
 
-                            <h2 className="text-xl font-bold text-center mb-6">ข้อมูลหุ่นยนต์และ Pot</h2>
+                            <h2 className="text-xl font-bold text-center mb-6">ข้อมูล Robot และ Pot</h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 {/* PieChart - Pot */}

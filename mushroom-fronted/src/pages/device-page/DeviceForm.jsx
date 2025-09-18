@@ -93,8 +93,8 @@ const DeviceForm = ({
                     required
                 >
                     <option value="">Select Device</option>
-                    <option value="active">หุ่นทำงาน</option>
-                    <option value="inactive">หุ่นไม่ทำงาน</option>
+                    <option value="active">Robot active</option>
+                    <option value="inactive">Robot inactive</option>
                 </select>
 
                 <div className="flex justify-end gap-2">

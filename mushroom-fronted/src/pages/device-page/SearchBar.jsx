@@ -29,8 +29,8 @@ const SearchBar = ({ search, setSearch, selectedType, setSelectedType, SelectedS
         onChange={(e) => setSelectedStatus(e.target.value)}
       >
         <option value="">All Types</option>
-        <option value="หุ่นทำงาน">หุ่นทำงาน</option>
-        <option value="หุ่นไม่ทำงาน">หุ่นไม่ทำงาน</option>
+        <option value="Robot active">Robot active</option>
+        <option value="Robot inactive">Robot inactive</option>
       </select>
 
       <button

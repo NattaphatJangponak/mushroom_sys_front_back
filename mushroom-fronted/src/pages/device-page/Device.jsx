@@ -112,9 +112,9 @@ const Device = () => {
   
     const statusTypeText =
       device.status === "active"
-        ? "หุ่นทำงาน"
+        ? "Robot active"
         : device.status === "inactive"
-          ? "หุ่นไม่ทำงาน"
+          ? "Robot inactive"
           : "";
   
     const matchType = selectedType === "" || deviceTypeText === selectedType;
