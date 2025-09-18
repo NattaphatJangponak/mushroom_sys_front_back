@@ -36,8 +36,8 @@ const ViewPot = () => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [rotation, setRotation] = useState(90);
   const [rotation2, setRotation2] = useState(90);
-  const [scale, setScale] = useState(1);
-  const [scale2, setScale2] = useState(1);
+  const [scale, setScale] = useState(0.6);
+  const [scale2, setScale2] = useState(0.6);
 
   const handleDownload = () => {
     const link = document.createElement("a");
@@ -258,7 +258,7 @@ const ViewPot = () => {
       {/* Image View Modal */}
       {showImageModal && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center px-4">
-          <div className="relative bg-white rounded-xl shadow-xl inline-block overflow-auto">
+          <div className="relative bg-white rounded-xl shadow-xl inline-block overflow-auto max-w-[95vw] max-h-[90vh] p-2">
 
             {/* ปุ่มปิด */}
             <button
@@ -315,6 +315,7 @@ const ViewPot = () => {
                     style={{
                       transform: `rotate(${rotation}deg) scale(${scale})`,
                       maxWidth: "100%",
+                      maxHeight: "70vh",
                     }}
                   />
                 </div>
@@ -330,6 +331,7 @@ const ViewPot = () => {
                     style={{
                       transform: `rotate(${rotation2}deg) scale(${scale2})`,
                       maxWidth: "100%",
+                      maxHeight: "70vh",
                     }}
                   />
                 </div>
